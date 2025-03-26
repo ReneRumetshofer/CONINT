@@ -19,6 +19,12 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "fastify": "^5.2.2"
+    "@fastify/postgres": "^6.0.2",
+    "fastify": "^5.2.2",
+    "fastify-plugin": "^5.0.1",
+    "pg": "^8.14.1"
+  },
+  "devDependencies": {
+    "prettier": "3.5.3"
   }
 }
