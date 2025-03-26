@@ -1,0 +1,24 @@
+{
+  "name": "safenotes",
+  "version": "1.0.0",
+  "description": "Safe notes backend for CONINT ILV 2025",
+  "homepage": "https://github.com/ReneRumetshofer/CONINT#readme",
+  "bugs": {
+    "url": "https://github.com/ReneRumetshofer/CONINT/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReneRumetshofer/CONINT.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "fastify": "^5.2.2"
+  }
+}
