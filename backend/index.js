@@ -1,16 +1,16 @@
-import Fastify from "fastify";
-import dbConnector from "./infra/postgres-connector.js";
+import Fastify from 'fastify';
+import dbConnector from './db/postgres-connector.js';
+import notesRoutes from './routes/notes.routes.js';
+import migrate from './db/migration.service.js';
+
+await migrate();
 
 const fastify = Fastify({
   logger: true,
 });
 
 fastify.register(dbConnector);
-
-// Declare a route
-fastify.get("/", function (request, reply) {
-  reply.send({ hello: "world" });
-});
+fastify.register(notesRoutes);
 
 // Run the server!
 fastify.listen({ port: 3000 }, function (err, address) {

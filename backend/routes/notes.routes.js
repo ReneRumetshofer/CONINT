@@ -1,9 +1,14 @@
-async function routes (fastify, options) {
-    const collection = fastify.mongo.db.collection('test_collection')
+async function routes(fastify, options) {
+  fastify.get('/notes', async (request, reply) => {
+    fastify.pg.query(
+      'SELECT notes_uuid, hmac, content FROM notes',
+      function onResult(err, result) {
+        reply.send(err || result?.rows);
+      }
+    );
 
-    fastify.get('/', async (request, reply) => {
-        return {hello: 'world'}
-    })
+    return reply;
+  });
 }
 
 export default routes;
