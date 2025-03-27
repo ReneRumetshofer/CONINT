@@ -11,6 +11,24 @@ services:
       - "5432:5432"
     volumes:
       - secure_notes_postgres:/var/lib/postgresql/data
+    networks:
+      - secure_notes_network
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - secure_notes_network
+    env_file: backend/docker.env
+    depends_on:
+      - postgres
 
 volumes:
   secure_notes_postgres:
+
+networks:
+  secure_notes_network:
