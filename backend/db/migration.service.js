@@ -13,33 +13,28 @@ async function migrate() {
     password: process.env.DB_PASSWORD,
   });
 
-  try {
-    await client.connect();
+  await client.connect();
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const postgrator = new Postgrator({
-      migrationPattern: path.join(__dirname, '/migrations/*'),
-      driver: 'pg',
-      database: process.env.DB_NAME,
-      schemaTable: 'migrations',
-      currentSchema: 'public', // Postgres and MS SQL Server only
-      execQuery: (query) => client.query(query),
-    });
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const postgrator = new Postgrator({
+    migrationPattern: path.join(__dirname, '/migrations/*'),
+    driver: 'pg',
+    database: process.env.DB_NAME,
+    schemaTable: 'migrations',
+    currentSchema: 'public', // Postgres and MS SQL Server only
+    execQuery: (query) => client.query(query),
+  });
 
-    const result = await postgrator.migrate();
+  const result = await postgrator.migrate();
 
-    if (result.length === 0) {
-      console.log(
-        'No migrations run for schema "public". Already at the latest one.'
-      );
-    }
-
-    console.log('Migration done.');
-  } catch (err) {
-    console.error(err);
-    process.exitCode = 1;
+  if (result.length === 0) {
+    console.log(
+      'No migrations run for schema "public". Already at the latest one.'
+    );
   }
+
+  console.log('Migration done.');
 
   await client.end();
 }

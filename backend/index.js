@@ -3,7 +3,12 @@ import dbConnector from './db/postgres-connector.js';
 import notesRoutes from './routes/notes.routes.js';
 import migrate from './db/migration.service.js';
 
-await migrate();
+try {
+  await migrate();
+} catch (err) {
+  console.error('Migrations failed with error; ', err);
+  process.exit(1);
+}
 
 const fastify = Fastify({
   logger: true,
@@ -12,11 +17,9 @@ const fastify = Fastify({
 fastify.register(dbConnector);
 fastify.register(notesRoutes);
 
-// Run the server!
 fastify.listen({ port: 3000 }, function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-  // Server is now listening on ${address}
 });

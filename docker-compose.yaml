@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: securenotes
+    ports:
+      - "5432:5432"
+    volumes:
+      - secure_notes_postgres:/var/lib/postgresql/data
+
+volumes:
+  secure_notes_postgres:
