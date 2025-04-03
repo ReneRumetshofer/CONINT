@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors';
 import dbConnector from './db/postgres-connector.js';
 import notesRoutes from './routes/notes.routes.js';
 import migrate from './db/migration.service.js';
@@ -12,6 +13,11 @@ try {
 
 const fastify = Fastify({
   logger: true,
+});
+
+await fastify.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
 fastify.register(dbConnector);
