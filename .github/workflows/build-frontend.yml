@@ -1,20 +1,20 @@
-name: Backend Pipeline
+name: Frontend Pipeline
 
 on:
   push:
     paths:
-      - 'backend/**'
+      - 'frontend/**'
     branches:
       - main
   pull_request:
     paths:
-      - 'backend/**'
+      - 'frontend/**'
     branches:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/backend
-  WORKDIR: backend
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/frontend
+  WORKDIR: frontend
 
 jobs:
   lint-and-test:
@@ -42,7 +42,7 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         with:
           args: >
-            -Dsonar.projectKey=${{ github.repository }}-backend
+            -Dsonar.projectKey=${{ github.repository }}-frontend
             -Dsonar.sources=.
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
 
       - name: Build and Push
         run: |
-          docker build -t $IMAGE_NAME:${{ github.sha }} ./backend
+          docker build -t $IMAGE_NAME:${{ github.sha }} ./frontend
           docker push $IMAGE_NAME:${{ github.sha }}
 
   deploy:
@@ -73,7 +73,7 @@ jobs:
     needs: build-and-push
     steps:
       - uses: actions/checkout@v3
-      - run: ./scripts/deploy-staging.sh backend $IMAGE_NAME:${{ github.sha }}
+      - run: ./scripts/deploy-staging.sh frontend $IMAGE_NAME:${{ github.sha }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -83,12 +83,12 @@ jobs:
     needs: deploy
     defaults:
       run:
-        working-directory: backend
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npx playwright install && npx playwright test
       - uses: grafana/k6-action@v0.2.0
         with:
-          filename: backend/load-test.js
-      - run: ./scripts/switch-green-live.sh backend
+          filename: frontend/load-test.js
+      - run: ./scripts/switch-green-live.sh frontend

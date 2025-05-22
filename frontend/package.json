@@ -1,0 +1,26 @@
+{
+  "name": "secret-notes-frontend",
+  "version": "1.0.0",
+  "description": "Frontend für Secret Notes",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "live-server src",
+    "lint": "eslint src/",
+    "test": "jest --coverage",
+    "e2e": "playwright test",
+    "perf": "k6 run test/k6/load-test.js"
+  },
+  "author": "Nick Müllner",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "@jest/globals": "^29.7.0",
+    "@playwright/test": "^1.52.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.1.0",
+    "jest": "^29.7.0",
+    "k6": "^0.0.0",
+    "live-server": "^1.2.2",
+    "playwright": "^1.52.0"
+  }
+}
