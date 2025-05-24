@@ -35,6 +35,9 @@ devDependencies:
   snyk:
     specifier: ^1.1297.1
     version: 1.1297.1
+  sonar-scanner:
+    specifier: ^3.1.0
+    version: 3.1.0
 
 packages:
 
@@ -3640,6 +3643,12 @@ packages:
     dependencies:
       '@sentry/node': 7.120.3
       global-agent: 3.0.0
+    dev: true
+
+  /sonar-scanner@3.1.0:
+    resolution: {integrity: sha512-KD7W3wHCKJKAakhn8ckxNYTxkdb1cnJa3ot0NVvO8CCeJjb0yvF0fW2yGdI09zMHsqxCRsl4dLtyCL2SUv47WA==}
+    hasBin: true
+    requiresBuild: true
     dev: true
 
   /source-map-resolve@0.5.3:

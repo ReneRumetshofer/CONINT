@@ -9,7 +9,8 @@
     "test": "jest --coverage",
     "e2e": "playwright test",
     "perf": "k6 run test/k6/load-test.js",
-    "security": "snyk test"
+    "security": "snyk test",
+    "scan": "sonar-scanner"
   },
   "author": "Nick Müllner",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "k6": "^0.0.0",
     "live-server": "^1.2.2",
     "playwright": "^1.52.0",
-    "snyk": "^1.1297.1"
+    "snyk": "^1.1297.1",
+    "sonar-scanner": "^3.1.0"
   }
 }
