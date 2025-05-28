@@ -1,6 +1,6 @@
 const status = document.getElementById("status");
 
-fetch("http://localhost:3000/notes")
+fetch("/notes")
   .then((response) => response.json())
   .then((data) => {
     status.innerText = "Connection to API successfully established";
