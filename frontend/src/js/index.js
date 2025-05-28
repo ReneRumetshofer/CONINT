@@ -1,6 +1,7 @@
 const status = document.getElementById("status");
+const api_url = "http//${window.location.hostname}:3000";
 
-fetch("/notes")
+fetch(api_url + "/notes")
   .then((response) => response.json())
   .then((data) => {
     status.innerText = "Connection to API successfully established";
