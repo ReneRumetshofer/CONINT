@@ -9,6 +9,7 @@
     "test": "jest --coverage",
     "e2e": "playwright test",
     "perf": "k6 run test/k6/load-test.js",
+    "security-auth": "snyk auth",
     "security": "snyk test",
     "scan": "sonar-scanner"
   },
