@@ -9,8 +9,6 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         SONARQUBE_SERVER = 'localhost'
-        SNYK_TOKEN = credentials('snyk-token')
-        AWS_CREDENTIALS = credentials('aws-creds')
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
@@ -30,7 +28,7 @@ pipeline {
                             withSonarQubeEnv("${SONARQUBE_SERVER}") {
                                 sh 'sonar-scanner'
                             }
-                            sh "snyk auth $SNYK_TOKEN"
+                            sh "snyk auth"
                             sh 'snyk test'
                         }
                     }
