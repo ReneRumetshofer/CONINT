@@ -25,11 +25,9 @@ pipeline {
                             sh 'npm run lint'
 
                             echo 'SonarQube & Snyk Frontend...'
-                            withSonarQubeEnv("${SONARQUBE_SERVER}") {
-                                sh 'sonar-scanner'
-                            }
-                            sh "snyk auth"
-                            sh 'snyk test'
+                            sh 'npm run scan'
+                            sh 'npm run security-auth'
+                            sh 'npm run security'
                         }
                     }
                     if (params.BUILD_BACKEND) {
@@ -55,7 +53,7 @@ pipeline {
                 script {
                     if (params.BUILD_FRONTEND) {
                         dir('frontend') {
-                            sh 'npm run test -- --coverage'
+                            sh 'npm run test'
                             junit '**/test-results.xml'
                         }
                     }
