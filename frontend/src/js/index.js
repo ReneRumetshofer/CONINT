@@ -1,5 +1,5 @@
 const status = document.getElementById("status");
-const api_url = "http//${window.location.hostname}:3000";
+const api_url = `http://${window.location.hostname}:3000`;
 
 fetch(api_url + "/notes")
   .then((response) => response.json())
