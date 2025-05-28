@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(name: 'BUILD_FRONTEND', defaultValue: true, description: 'Frontend bauen und deployen?')
+        booleanParam(name: 'BUILD_FRONTEND', defaultValue: false, description: 'Frontend bauen und deployen?')
         booleanParam(name: 'BUILD_BACKEND', defaultValue: false, description: 'Backend bauen und deployen?')
     }
 
