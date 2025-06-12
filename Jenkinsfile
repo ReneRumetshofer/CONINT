@@ -14,7 +14,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        SONARQUBE_SERVER = 'sonarqube'
+        SONAR_HOST_URL = 'sonarqube'
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
@@ -43,7 +43,7 @@ pipeline {
                             sh 'npm run lint'
 
                             echo 'SonarQube & Snyk Backend...'
-                            withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                            withSonarQubeEnv("${SONAR_HOST_URL}") {
                                 sh 'sonar-scanner'
                             }
                             sh "snyk auth $SNYK_TOKEN"
