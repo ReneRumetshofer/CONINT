@@ -122,10 +122,12 @@ pipeline {
 
         stage('E2E & Performance Testing') {
             steps {
-                if (params.DEPLOY) {
-                    echo 'Running E2E (Playwright) and Performance (k6) tests...'
-                    sh 'npx playwright test'
-                    sh 'k6 run tests/perf.js'
+                script {
+                    if (params.DEPLOY) {
+                        echo 'Running E2E (Playwright) and Performance (k6) tests...'
+                        sh 'npx playwright test'
+                        sh 'k6 run tests/perf.js'
+                    }
                 }
             }
         }
@@ -135,9 +137,11 @@ pipeline {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
-                if (params.DEPLOY) {
-                    echo 'Switching Blue/Green deployment...'
-                    sh './scripts/switch-blue-green.sh'
+                script {
+                    if (params.DEPLOY) {
+                        echo 'Switching Blue/Green deployment...'
+                        sh './scripts/switch-blue-green.sh'
+                    }
                 }
             }
         }
