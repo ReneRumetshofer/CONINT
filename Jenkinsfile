@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(name: 'BUILD_FRONTEND', defaultValue: false, description: 'Frontend bauen und deployen?')
-        booleanParam(name: 'BUILD_BACKEND', defaultValue: false, description: 'Backend bauen und deployen?')
+        booleanParam(name: 'BUILD_FRONTEND', defaultValue: false, description: 'Frontend bauen und pushen?')
+        booleanParam(name: 'BUILD_BACKEND', defaultValue: false, description: 'Backend bauen und pushen?')
+        booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Erzeugten Build deployen und testen?')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Tag unter dem das Docker image gepushed wird')
     }
 
     environment {
@@ -72,12 +74,12 @@ pipeline {
                 script {
                     if (params.BUILD_FRONTEND) {
                         dir('frontend') {
-                            sh "docker build -t $FRONTEND_IMAGE ."
+                            sh "docker build -t $FRONTEND_IMAGE:$IMAGE_TAG ."
                         }
                     }
                     if (params.BUILD_BACKEND) {
                         dir('backend') {
-                            sh "docker build -t $BACKEND_IMAGE ."
+                            sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG ."
                         }
                     }
                 }
@@ -104,13 +106,15 @@ pipeline {
         stage('Deploy to Staging (Blue/Green)') {
             steps {
                 script {
-                    if (params.BUILD_FRONTEND) {
-                        echo 'Deploying Frontend...'
-                        sh './scripts/deploy-blue-green.sh frontend'
-                    }
-                    if (params.BUILD_BACKEND) {
-                        echo 'Deploying Backend...'
-                        sh './scripts/deploy-blue-green.sh backend'
+                    if (params.DEPLOY) {
+                        if (params.BUILD_FRONTEND) {
+                            echo 'Deploying Frontend...'
+                            sh './scripts/deploy-blue-green.sh frontend'
+                        }
+                        if (params.BUILD_BACKEND) {
+                            echo 'Deploying Backend...'
+                            sh './scripts/deploy-blue-green.sh backend'
+                        }
                     }
                 }
             }
@@ -118,9 +122,11 @@ pipeline {
 
         stage('E2E & Performance Testing') {
             steps {
-                echo 'Running E2E (Playwright) and Performance (k6) tests...'
-                sh 'npx playwright test'
-                sh 'k6 run tests/perf.js'
+                if (params.DEPLOY) {
+                    echo 'Running E2E (Playwright) and Performance (k6) tests...'
+                    sh 'npx playwright test'
+                    sh 'k6 run tests/perf.js'
+                }
             }
         }
 
@@ -129,8 +135,10 @@ pipeline {
                 expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
             }
             steps {
-                echo 'Switching Blue/Green deployment...'
-                sh './scripts/switch-blue-green.sh'
+                if (params.DEPLOY) {
+                    echo 'Switching Blue/Green deployment...'
+                    sh './scripts/switch-blue-green.sh'
+                }
             }
         }
     }
