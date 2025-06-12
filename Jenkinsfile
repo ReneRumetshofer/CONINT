@@ -15,6 +15,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         SONAR_HOST_URL = 'sonarqube'
+        SONAR_CREDENTIALS = credentials('sonar-creds')
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
@@ -31,7 +32,9 @@ pipeline {
                             sh 'npm run lint'
 
                             echo 'SonarQube & Snyk Frontend...'
-                            sh 'npm run scan'
+                            withCredentials([usernamePassword(credentialsId: 'sonar-creds', passwordVariable: 'SONAR_TOKEN')]) {
+                                sh 'npm run scan-jenkins'
+                            }
                             sh 'npm run security-auth'
                             sh 'npm run security'
                         }
