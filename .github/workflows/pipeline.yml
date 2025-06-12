@@ -12,9 +12,6 @@ env:
 jobs:
   sast:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /
     steps:
       - uses: actions/checkout@v4
       - uses: SonarSource/sonarqube-scan-action@v5
@@ -28,9 +25,12 @@ jobs:
 
   vulnerability_scan:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /
     steps:
       - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
+      - name: Run Snyk vulnerability scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
