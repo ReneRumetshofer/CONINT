@@ -14,7 +14,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        SONARQUBE_SERVER = 'localhost'
+        SONARQUBE_SERVER = 'sonarqube'
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
