@@ -30,7 +30,7 @@ pipeline {
                             sh 'npm run lint'
 
                             echo 'SonarQube & Snyk Frontend...'
-                            withCredentials([usernamePassword(credentialsId: 'sonar-creds', passwordVariable: 'SONAR_TOKEN')]) {
+                            withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                                 sh 'npm run scan-jenkins'
                             }
                             sh 'npm run security-auth'
