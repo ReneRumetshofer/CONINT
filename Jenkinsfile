@@ -31,7 +31,9 @@ pipeline {
                             sh 'npm run lint'
 
                             echo 'SonarQube & Snyk Frontend...'
-                            sh 'npm run scan'
+                            withSonarQubeEnv("${SONAR_HOST_URL}") {
+                                sh 'npm run scan'
+                            }
                             sh 'npm run security-auth'
                             sh 'npm run security'
                         }
