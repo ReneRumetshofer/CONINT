@@ -36,6 +36,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: monitor
+          file: backend/package.json
 
   test-backend:
     runs-on: ubuntu-latest
