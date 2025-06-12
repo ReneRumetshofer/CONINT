@@ -74,12 +74,12 @@ pipeline {
                 script {
                     if (params.BUILD_FRONTEND) {
                         dir('frontend') {
-                            sh "docker build -t $FRONTEND_IMAGE:$IMAGE_TAG ."
+                            sh "docker build -t $FRONTEND_IMAGE:$IMAGE_TAG -t $FRONTEND_IMAGE:latest ."
                         }
                     }
                     if (params.BUILD_BACKEND) {
                         dir('backend') {
-                            sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG ."
+                            sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG -t $FRONTEND_IMAGE:latest ."
                         }
                     }
                 }
