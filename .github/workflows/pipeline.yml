@@ -57,7 +57,7 @@ jobs:
 
   test-frontend:
     runs-on: ubuntu-latest
-    needs: [ sast, vulnerability_scan ]
+#    needs: [ sast, vulnerability_scan ]
     defaults:
       run:
         working-directory: frontend
