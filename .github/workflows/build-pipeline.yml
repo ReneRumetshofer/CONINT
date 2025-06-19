@@ -51,7 +51,7 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-image.outputs.image-tag }} \
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-backend-image.outputs.image-tag }} \
                      ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:latest
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-image.outputs.image-tag }}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-backend-image.outputs.image-tag }}
           docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:latest
