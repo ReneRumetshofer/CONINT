@@ -1,0 +1,57 @@
+name: Build and Push Docker Image (Backend)
+
+on: [pull_request, push]
+
+env:
+  DOCKERHUB_BACKEND_REPOSITORY: conint-securenotes-backend
+  DOCKERHUB_USERNAME: renerumetshofer
+
+jobs:
+  build-backend-image:
+    name: Build Backend Docker Image
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.tag.outputs.image-tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set Docker image tag
+        id: tag
+        run: echo "image-tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ steps.tag.outputs.image-tag }} ./backend
+      - name: Save Docker image to file
+        run: |
+          docker save ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ steps.tag.outputs.image-tag }} -o image.tar
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-image
+          path: image.tar
+
+  push-backend-image:
+    name: Push Backend Docker Image
+    needs: build-backend-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-image
+          path: .
+      - name: Load Docker image
+        run: |
+          docker load -i image.tar
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: |
+          docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-image.outputs.image-tag }} \
+                     ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:latest
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:${{ needs.build-image.outputs.image-tag }}
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_BACKEND_REPOSITORY }}:latest
