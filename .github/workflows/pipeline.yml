@@ -49,12 +49,11 @@ jobs:
       - uses: actions/setup-node@v4
       - run: npm ci
       - run: npm run test -- --coverage
-      - run: ls -R
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
-          path: coverage/lcov-report/*
+          path: backend/coverage/lcov-report
 
 #  test-frontend:
 #    runs-on: ubuntu-latest
