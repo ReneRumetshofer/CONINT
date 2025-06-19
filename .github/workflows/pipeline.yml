@@ -25,18 +25,14 @@ jobs:
 
   vulnerability_scan:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk vulnerability scan
-        uses: snyk/actions/node@master
+      - uses: actions/checkout@main
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-node@v4
+      - name: Snyk monitor
+        run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
-          file: backend/package.json
 
   test-backend:
     runs-on: ubuntu-latest
