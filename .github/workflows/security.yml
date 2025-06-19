@@ -11,6 +11,6 @@ jobs:
       - uses: actions/setup-node@v4
       - name: Snyk test
         working-directory: ./backend
-        run: snyk test
+        run: snyk test --all-projects --org=${{ secrets.SNYK_ORG }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
