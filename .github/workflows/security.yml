@@ -7,8 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - name: Run Snyk to check for vulnerabilities
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-node@v4
+      - name: Snyk test
         working-directory: ./backend
-        uses: snyk/actions/node@master
+        run: snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
