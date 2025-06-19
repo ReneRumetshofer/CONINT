@@ -10,7 +10,7 @@ jobs:
       - uses: snyk/actions/setup@master
       - uses: actions/setup-node@v4
       - name: Snyk test
-        working-directory: ./backend
+#        working-directory: ./backend
         run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
