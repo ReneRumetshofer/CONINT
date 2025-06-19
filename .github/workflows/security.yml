@@ -1,6 +1,6 @@
 name: Security
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   security:
@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: Run Snyk to check for vulnerabilities
+        working-directory: ./backend
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
