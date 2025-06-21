@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - production
+      - build
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/backend
@@ -71,3 +72,13 @@ jobs:
 #        with:
 #          name: frontend-coverage-report
 #          path: frontend/coverage/lcov-report
+
+  build-backend-image:
+    name: Build & Deliver Backend Image
+    needs: test-backend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: backend
+      dockerhub-repository: conint-securenotes-backend
+      image-artifact-name: backend-image
