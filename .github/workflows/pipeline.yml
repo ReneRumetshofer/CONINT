@@ -74,8 +74,10 @@ jobs:
 #          path: frontend/coverage/lcov-report
 
   build-backend-image:
-    uses: ./.github/workflows/build-and-deliver.yml
+    needs: test-backend
+    if: github.ref == 'refs/heads/production'
     secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
     with:
       working-directory: backend
       dockerhub-repository: conint-securenotes-backend
