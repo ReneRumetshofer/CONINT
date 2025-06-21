@@ -18,6 +18,7 @@ env:
 
 jobs:
   build-image:
+    name: Build Docker Image
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.tag.outputs.image-tag }}
@@ -42,6 +43,7 @@ jobs:
   push-backend-image:
     name: Push Docker Image
     needs: build-image
+    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
       - name: Download image artifact
