@@ -75,6 +75,7 @@ jobs:
 
   build-backend-image:
     uses: ./.github/workflows/build-and-deliver.yml
+    secrets: inherit
     with:
       working-directory: backend
       dockerhub-repository: conint-securenotes-backend
