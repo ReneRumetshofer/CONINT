@@ -71,3 +71,10 @@ jobs:
 #        with:
 #          name: frontend-coverage-report
 #          path: frontend/coverage/lcov-report
+
+  build-backend-image:
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: backend
+      dockerhub-repository: conint-securenotes-backend
+      image-artifact-name: backend-image
