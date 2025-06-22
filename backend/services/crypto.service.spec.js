@@ -72,7 +72,7 @@ describe('Crypto Service', () => {
       const uuid1 = generateUUID();
       const uuid2 = generateUUID();
 
-      expect(uuid1).not.toBe(uuid2);
+      expect(uuid1).not.toBe(uuid1);
     });
   });
 });
