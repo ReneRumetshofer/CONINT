@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Set Docker image tag
         id: tag
-        run: echo "image-tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        run: echo "image-tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
       - name: Build Docker image
         run: |
           docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.dockerhub-repository }}:${{ steps.tag.outputs.image-tag }} ${{ inputs.working-directory }}
@@ -43,7 +43,7 @@ jobs:
   push-backend-image:
     name: Push Docker Image
     needs: build-image
-    if: github.ref == 'refs/heads/production'
+#    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
       - name: Download image artifact
