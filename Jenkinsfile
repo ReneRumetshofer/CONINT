@@ -33,7 +33,9 @@ pipeline {
                             withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                                 sh 'npm run scan-jenkins'
                             }
-                            sh 'npm run security-auth'
+                            withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
+                                sh 'echo $SNYK_TOKEN | snyk auth'
+                            }
                             sh 'npm run security'
                         }
                     }
