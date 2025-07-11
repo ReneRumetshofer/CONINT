@@ -61,13 +61,11 @@ pipeline {
                     if (params.BUILD_FRONTEND) {
                         dir('frontend') {
                             sh 'npm run test'
-                            junit '**/test-results.xml'
                         }
                     }
                     if (params.BUILD_BACKEND) {
                         dir('backend') {
                             sh 'npm run test -- --coverage'
-                            junit '**/test-results.xml'
                         }
                     }
                 }
