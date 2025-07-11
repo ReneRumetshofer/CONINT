@@ -34,6 +34,8 @@ services:
     restart: always
     ports:
       - "80:80"
+    networks:
+      - secure_notes_network
     depends_on:
       - backend
 
