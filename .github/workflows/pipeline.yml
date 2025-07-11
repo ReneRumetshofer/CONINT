@@ -89,7 +89,7 @@ jobs:
     name: Deploy new Green version
     runs-on: ubuntu-latest
     needs: build-deliver-backend-image
-#    if: github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/production'
     outputs:
       image-tag: ${{ steps.tag.outputs.image-tag }}
     steps:
@@ -100,14 +100,16 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           GREEN_BACKEND_TAG: ${{ steps.tag.outputs.image-tag }}
+          GREEN_FRONTEND_TAG: ${{ steps.tag.outputs.image-tag }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
-          envs: GREEN_BACKEND_TAG
+          envs: [GREEN_BACKEND_TAG, GREEN_FRONTEND_TAG]
           script: |
             cd deployment
             sed -i "s/^GREEN_BACKEND_TAG=.*/GREEN_BACKEND_TAG=${GREEN_BACKEND_TAG}/" .env
+            sed -i "s/^GREEN_FRONTEND_TAG=.*/GREEN_FRONTEND_TAG=${GREEN_FRONTEND_TAG}/" .env
             docker-compose pull green
             docker-compose up -d green
 
@@ -115,7 +117,7 @@ jobs:
     name: Switch from Blue to Green
     runs-on: ubuntu-latest
     needs: deploy-green
-#    if: github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/production'
     steps:
       - name: Switch from Blue to Green
         uses: appleboy/ssh-action@v1
@@ -133,7 +135,7 @@ jobs:
     name: Update Blue version and switch back to Blue
     runs-on: ubuntu-latest
     needs: switch-green-blue
-    #    if: github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/production'
     outputs:
       image-tag: ${{ steps.tag.outputs.image-tag }}
     steps:
