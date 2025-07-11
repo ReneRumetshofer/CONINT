@@ -2,16 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Secret Notes</title>
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <title>Notes App</title>
+  <style>
+      body {
+          font-family: sans-serif;
+          max-width: 800px;
+          margin: 2em auto;
+      }
+
+      input, textarea {
+          width: 100%;
+          margin: 0.5em 0;
+          padding: 0.5em;
+      }
+
+      button {
+          padding: 0.5em 1em;
+          margin-top: 0.5em;
+      }
+
+      .note {
+          border: 1px solid #ccc;
+          padding: 1em;
+          margin: 1em 0;
+      }
+  </style>
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center vh-100">
-<div class="container text-center bg-white p-4 rounded shadow">
-  <h1 class="text-dark">Secret Notes</h1>
-  <p class="text-dark" id="status"></p>
-</div>
-<script src="js/bootstrap.bundle.min.js"></script>
+<body>
+<h1>Notes App</h1>
+
+<h2>Alle Notizen</h2>
+<div id="notes"></div>
+
+<h2>Neue Notiz erstellen</h2>
+<form id="newNoteForm">
+  <input id="newTitle" placeholder="Titel" required type="text" />
+  <textarea id="newContent" placeholder="Inhalt" required></textarea>
+  <input id="newKey" placeholder="Verschlüsselungs-Key" required type="text" />
+  <button type="submit">Erstellen</button>
+</form>
+
 <script src="js/index.js"></script>
 </body>
 </html>

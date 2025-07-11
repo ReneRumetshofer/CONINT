@@ -1,13 +1,63 @@
-const status = document.getElementById("status");
-const api_url = `http://${window.location.hostname}:3000`;
+const API = 'http://localhost:3000';
 
-fetch(api_url + "/notes")
-  .then((response) => response.json())
-  .then((data) => {
-    status.innerText = "Connection to API successfully established";
-    console.log(data);
-  })
-  .catch((error) => {
-    status.innerText = "Connection to API failed, see console log";
-    console.log(error);
+async function loadNotes() {
+  const res = await fetch(`${API}/notes`);
+  const notes = await res.json();
+  const container = document.getElementById('notes');
+  container.innerHTML = '';
+  notes.forEach(note => {
+    const div = document.createElement('div');
+    div.className = 'note';
+    div.innerHTML = `
+          <strong>${note.title}</strong><br />
+          UUID: ${note.notes_uuid}<br />
+          <input type="text" placeholder="Key eingeben" id="key-${note.notes_uuid}" />
+          <button onclick="loadNote('${note.notes_uuid}')">Anzeigen</button>
+          <button onclick="deleteNote('${note.notes_uuid}')">Löschen</button>
+          <pre id="content-${note.notes_uuid}"></pre>
+        `;
+    container.appendChild(div);
   });
+}
+
+async function loadNote(uuid) {
+  const key = document.getElementById(`key-${uuid}`).value;
+  const res = await fetch(`${API}/notes/${uuid}?key=${encodeURIComponent(key)}`);
+  const contentBox = document.getElementById(`content-${uuid}`);
+  if (res.ok) {
+    const text = await res.text();
+    contentBox.textContent = text;
+  } else {
+    contentBox.textContent = `Fehler: ${res.status} ${await res.text()}`;
+  }
+}
+
+async function deleteNote(uuid) {
+  await fetch(`${API}/notes/${uuid}`, { method: 'DELETE' });
+  await loadNotes();
+}
+
+document.getElementById('newNoteForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const title = document.getElementById('newTitle').value;
+  const content = document.getElementById('newContent').value;
+  const key = document.getElementById('newKey').value;
+
+  console.log(key, content, key);
+
+  const res = await fetch(`${API}/notes`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, content, key })
+  });
+
+  if (res.ok) {
+    alert('Notiz erstellt!');
+    document.getElementById('newNoteForm').reset();
+    loadNotes();
+  } else {
+    alert('Fehler beim Erstellen der Notiz.');
+  }
+});
+
+loadNotes();
