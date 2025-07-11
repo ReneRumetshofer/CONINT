@@ -9,14 +9,17 @@ async function loadNotes() {
     const div = document.createElement('div');
     div.className = 'note';
     div.innerHTML = `
-          <strong>${note.title}</strong><br />
-          UUID: ${note.notes_uuid}<br />
-          <input type="text" placeholder="Key eingeben" id="key-${note.notes_uuid}" />
-          <button onclick="loadNote('${note.notes_uuid}')">Anzeigen</button>
-          <button onclick="deleteNote('${note.notes_uuid}')">Löschen</button>
-          <pre id="content-${note.notes_uuid}"></pre>
-        `;
+    <strong>${note.title}</strong><br />
+    UUID: ${note.notes_uuid}<br />
+    <input type="text" placeholder="Key eingeben" id="key-${note.notes_uuid}" />
+    <button id="show-${note.notes_uuid}">Anzeigen</button>
+    <button id="del-${note.notes_uuid}">Löschen</button>
+    <pre id="content-${note.notes_uuid}"></pre>
+  `;
     container.appendChild(div);
+
+    document.getElementById(`show-${note.notes_uuid}`).addEventListener('click', () => loadNote(note.notes_uuid));
+    document.getElementById(`del-${note.notes_uuid}`).addEventListener('click', () => deleteNote(note.notes_uuid));
   });
 }
 
