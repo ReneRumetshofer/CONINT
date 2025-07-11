@@ -113,6 +113,43 @@ jobs:
             docker-compose pull green
             docker-compose up -d green
 
+  e2e-and-performance-tests:
+    name: E2E & Performance Tests
+    runs-on: ubuntu-latest
+    needs: deploy-green
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E Tests
+        run: npm run e2e
+        env:
+          BASE_URL: https://staging.conint-securenotes.online
+
+      - name: Install k6
+        run: |
+          sudo apt update
+          sudo apt install -y gnupg software-properties-common
+          curl -s https://packagecloud.io/install/repositories/loadimpact/k6/script.deb.sh | sudo bash
+          sudo apt install -y k6
+
+      - name: Run k6 Performance Tests
+        run: npm run perf
+
+
   switch-green-blue:
     name: Switch from Blue to Green
     runs-on: ubuntu-latest
