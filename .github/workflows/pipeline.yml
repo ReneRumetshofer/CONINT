@@ -105,7 +105,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
-          envs: [GREEN_BACKEND_TAG, GREEN_FRONTEND_TAG]
+          envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
           script: |
             cd deployment
             sed -i "s/^GREEN_BACKEND_TAG=.*/GREEN_BACKEND_TAG=${GREEN_BACKEND_TAG}/" .env
