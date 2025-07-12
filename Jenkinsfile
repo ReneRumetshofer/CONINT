@@ -183,7 +183,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Blue') {
+        /*stage('Deploy to Blue') {
             when {
                 expression { return params.DEPLOY }
             }
@@ -212,6 +212,6 @@ pipeline {
                 "
                 '''
             }
-        }
+        }*/
     }
 }
