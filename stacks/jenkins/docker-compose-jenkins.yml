@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   jenkins:
-    image: nick7152/jenkins-docker
+    build:
+      dockerfile: Dockerfile
     container_name: jenkins
     user: jenkins
     restart: unless-stopped
