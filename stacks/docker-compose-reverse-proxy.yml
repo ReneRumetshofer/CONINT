@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - jenkins_jenkins_network
+      - portainer_portainer_network
+      - sonar_qube_sonar_qube_network
+      - proxy_network
+  blue-green-proxy:
+    image: nginx:1.29.0-alpine
+    container_name: blue-green-proxy
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - secret_notes_secure_notes_network
+      - proxy_network
+
+networks:
+  secret_notes_secure_notes_network:
+    external: true
+  jenkins_jenkins_network:
+    external: true
+  portainer_portainer_network:
+    external: true
+  sonar_qube_sonar_qube_network:
+    external: true
+  proxy_network:
