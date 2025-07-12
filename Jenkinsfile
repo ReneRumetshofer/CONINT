@@ -120,6 +120,18 @@ pipeline {
             }
         }
 
+        stage('Start Database if not running') {
+            when {
+                expression { return params.DEPLOY }
+            }
+            steps {
+                script {
+                    echo 'Starting database...'
+                    sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d db"
+                }
+            }
+        }
+
         stage('Deploy to Green') {
             when {
                 expression { return params.DEPLOY }
@@ -128,11 +140,11 @@ pipeline {
                 script {
                     if (params.BUILD_FRONTEND) {
                         echo 'Deploying Frontend to green...'
-                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
                     }
                     if (params.BUILD_BACKEND) {
                         echo 'Deploying Backend to green...'
-                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
                     }
                 }
             }
