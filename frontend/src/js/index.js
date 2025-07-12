@@ -2,7 +2,7 @@
 
 const API =
   window.location.hostname === "localhost"
-    ? "http://localhost:3000"
+    ? "http://localhost:3000/api"
     : "https://prod.conint-securenotes.online/api";
 
 async function loadNotes() {

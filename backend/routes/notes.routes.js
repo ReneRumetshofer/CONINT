@@ -5,7 +5,7 @@ import {
 } from '../services/crypto.service.js';
 
 async function routes(fastify, options) {
-  fastify.get('/notes', async (request, reply) => {
+  fastify.get('/api/notes', async (request, reply) => {
     fastify.pg.query(
       'SELECT notes_uuid, title FROM notes',
       function onResult(err, result) {
@@ -34,7 +34,7 @@ async function routes(fastify, options) {
       },
     },
   };
-  fastify.get('/notes/:uuid', getNoteOpts, async (request, reply) => {
+  fastify.get('/api/notes/:uuid', getNoteOpts, async (request, reply) => {
     console.log(request.query);
     fastify.pg.query(
       'SELECT content FROM notes WHERE notes_uuid = $1',
@@ -73,7 +73,7 @@ async function routes(fastify, options) {
       },
     },
   };
-  fastify.post('/notes', postNoteOpts, async (request, reply) => {
+  fastify.post('/api/notes', postNoteOpts, async (request, reply) => {
     const encryptedContent = encryptNote(
       request.body.key,
       request.body.content
@@ -98,7 +98,7 @@ async function routes(fastify, options) {
       },
     },
   };
-  fastify.delete('/notes/:uuid', async (request, reply) => {
+  fastify.delete('/api/notes/:uuid', async (request, reply) => {
     return fastify.pg.transact(async (client) => {
       await client.query('DELETE FROM notes WHERE notes_uuid = $1', [
         request.params.uuid,

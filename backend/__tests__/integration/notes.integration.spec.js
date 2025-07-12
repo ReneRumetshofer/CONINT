@@ -75,7 +75,7 @@ describe('Notes routes IT', () => {
       );
     });
 
-    const res = await supertest(fastify.server).get('/notes');
+    const res = await supertest(fastify.server).get('/api/notes');
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([{ notes_uuid: noteId, title }]);
@@ -89,15 +89,17 @@ describe('Notes routes IT', () => {
       key: 'my-passphrase',
     };
 
-    const postRes = await supertest(fastify.server).post('/notes').send(note);
+    const postRes = await supertest(fastify.server)
+      .post('/api/notes')
+      .send(note);
     expect(postRes.statusCode).toBe(200);
 
-    const listRes = await supertest(fastify.server).get('/notes');
+    const listRes = await supertest(fastify.server).get('/api/notes');
     const noteUUID = listRes.body[0]?.notes_uuid;
     expect(noteUUID).toBeDefined();
 
     const getRes = await supertest(fastify.server).get(
-      `/notes/${noteUUID}?key=${note.key}`
+      `/api/notes/${noteUUID}?key=${note.key}`
     );
 
     expect(getRes.statusCode).toBe(200);
@@ -117,7 +119,7 @@ describe('Notes routes IT', () => {
     });
 
     const res = await supertest(fastify.server).get(
-      `/notes/${uuid}?key=wrong-key`
+      `/api/notes/${uuid}?key=wrong-key`
     );
 
     expect(res.statusCode).toBe(403);
