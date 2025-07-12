@@ -130,7 +130,7 @@ pipeline {
             }
             steps {
                 echo 'Starting database...'
-                sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d db"
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d db"
             }
         }
 
@@ -140,10 +140,10 @@ pipeline {
             }
             steps {
                 echo 'Deploying Frontend to green...'
-                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
+                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
 
                 echo 'Deploying Backend to green...'
-                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
+                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
             }
         }
 
@@ -189,10 +189,10 @@ pipeline {
             }
             steps {
                 echo 'Deploying Frontend to green...'
-                sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
 
                 echo 'Deploying Backend to green...'
-                sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
             }
         }
 
