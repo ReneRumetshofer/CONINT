@@ -9,10 +9,7 @@ const API_HOSTS = {
 };
 
 const hostname = window.location.hostname;
-const API =
-  typeof process !== "undefined" && process.env.BACKEND_GREEN_API
-    ? process.env.BACKEND_GREEN_API
-    : API_HOSTS[hostname]; // eslint-disable-line no-undef
+const API = process.env.BACKEND_GREEN_API || API_HOSTS[hostname]; // eslint-disable-line no-undef
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
