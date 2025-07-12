@@ -58,6 +58,9 @@ pipeline {
         }
 
         stage('Unit Tests') {
+            when {
+                expression { return params.STATIC_TESTS }
+            }
             steps {
                 script {
                     if (params.BUILD_FRONTEND) {
