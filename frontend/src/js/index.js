@@ -8,7 +8,7 @@ const API_HOSTS = {
     "https://prod.conint-securenotes.online/api",
 };
 
-const hostname = window.location.hostname;
+const hostname = process.env.BACKEND_GREEN || window.location.hostname;
 const API = API_HOSTS[hostname];
 
 async function loadNotes() {
