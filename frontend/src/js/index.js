@@ -1,4 +1,4 @@
-const posthog = require("./postHogClient.js");
+//const posthog = require("./postHogClient.js");
 
 const API =
   window.location.hostname === "localhost"
