@@ -24,8 +24,8 @@ services:
     expose:
       - 80
     volumes:
-      - /opt/CONINT/stacks/reverse-proxy/nginx/conf.d/:/etc/nginx/conf.d/
-      - /opt/CONINT/stacks/reverse-proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /opt/CONINT/stacks/reverse_proxy/nginx/conf.d/:/etc/nginx/conf.d/
+      - /opt/CONINT/stacks/reverse_proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
       - secret_notes_secret_notes_network
       - proxy_network
