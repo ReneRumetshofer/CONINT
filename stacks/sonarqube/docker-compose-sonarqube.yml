@@ -21,7 +21,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_temp:/opt/sonarqube/temp
     networks:
-      - sonar_qube_network
+      - sonarqube_network
       - jenkins_jenkins_network
 
   db:
@@ -35,7 +35,7 @@ services:
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     networks:
-      - sonar_qube_network
+      - sonarqube_network
 
 volumes:
   sonarqube_data:
@@ -45,6 +45,6 @@ volumes:
   postgresql_data:
 
 networks:
-  sonar_qube_network:
+  sonarqube_network:
   jenkins_jenkins_network:
     external: true
