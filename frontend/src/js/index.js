@@ -1,4 +1,4 @@
-//const posthog = require("./postHogClient.js");
+const posthog = require('./postHogClient.js');
 
 const API_HOSTS = {
   localhost: "http://localhost:3000/api",
@@ -11,6 +11,17 @@ const API_HOSTS = {
 
 const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
+
+window.addEventListener('DOMContentLoaded', () => {
+  posthog.onFeatureFlags(() => {
+    const variant = posthog.getFeatureFlag('new-ui-theme');
+    const button = document.getElementById('createNote');
+
+    if (button) {
+      button.style.backgroundColor = variant === 'green' ? 'green' : 'blue';
+    }
+  });
+});
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);

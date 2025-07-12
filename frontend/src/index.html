@@ -43,14 +43,15 @@
     <input id="newTitle" placeholder="Titel" required type="text" />
     <textarea id="newContent" placeholder="Inhalt" required></textarea>
     <input id="newKey" placeholder="Verschlüsselungs-Key" required type="text" />
-    <button type="submit">Erstellen</button>
+    <button id="createNote" type="submit">Erstellen</button>
   </form>
 
-  <script src="js/index.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initializeDOMInteractions();
     });
   </script>
+  <script type="module" src="js/index.js"></script>
+  
 </body>
 </html>
