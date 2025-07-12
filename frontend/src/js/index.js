@@ -6,10 +6,11 @@ const API_HOSTS = {
     "https://staging.conint-securenotes.online/api",
   "prod.conint-securenotes.online":
     "https://prod.conint-securenotes.online/api",
+  "frontend-green": "http://backend-green:3000/api",
 };
 
 const hostname = window.location.hostname;
-const API = process.env.BACKEND_GREEN_API || API_HOSTS[hostname]; // eslint-disable-line no-undef
+const API = API_HOSTS[hostname];
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
