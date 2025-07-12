@@ -173,10 +173,10 @@ pipeline {
                 echo 'Switching from blue to green deployment...'
                 sh '''
                 docker exec blue-green-proxy sh -c "
-                  sed -e 's|set \$active_frontend http://frontend-blue:80;|set \$active_frontend http://frontend-green:80;|' \
-                      -e 's|set \$active_backend http://backend-blue:3000;|set \$active_backend http://backend-green:3000;|' \
-                      /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp && \
-                  mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf && \
+                  sed -i \
+                      -e 's|set \\$active_frontend http://frontend-blue:80;|set \\$active_frontend http://frontend-green:80;|' \
+                      -e 's|set \\$active_backend http://backend-blue:3000;|set \\$active_backend http://backend-green:3000;|' \
+                      /etc/nginx/nginx.conf && \
                   nginx -s reload
                 "
                 '''
@@ -204,10 +204,10 @@ pipeline {
                 echo 'Switching green to blue deployment...'
                 sh '''
                 docker exec blue-green-proxy sh -c "
-                  sed -e 's|set \$active_frontend http://frontend-green:80;|set \$active_frontend http://frontend-blue:80;|' \
-                      -e 's|set \$active_backend http://backend-green:3000;|set \$active_backend http://backend-blue:3000;|' \
-                      /etc/nginx/nginx.conf > /etc/nginx/nginx.conf.tmp && \
-                  mv /etc/nginx/nginx.conf.tmp /etc/nginx/nginx.conf && \
+                  sed -i \
+                      -e 's|set \\$active_frontend http://frontend-green:80;|set \\$active_frontend http://frontend-blue:80;|' \
+                      -e 's|set \\$active_backend http://backend-green:3000;|set \\$active_backend http://backend-blue:3000;|' \
+                      /etc/nginx/nginx.conf && \
                   nginx -s reload
                 "
                 '''
