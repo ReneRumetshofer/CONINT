@@ -18,6 +18,8 @@ services:
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
     networks:
       - sonar_qube_network
       - jenkins_jenkins_network
@@ -38,6 +40,8 @@ services:
 volumes:
   sonarqube_data:
   sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
   postgresql_data:
 
 networks:
