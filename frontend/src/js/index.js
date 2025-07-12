@@ -1,3 +1,5 @@
+const posthog = require('./postHogClient.js');
+
 const API = 'http://localhost:3000';
 
 async function loadNotes() {
