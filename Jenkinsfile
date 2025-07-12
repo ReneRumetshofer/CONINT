@@ -27,6 +27,7 @@ pipeline {
                 dir('frontend') {
                     echo 'Installing frontend dependencies...'
                     sh 'npm ci'
+                    sh 'npx playwright install'
                 }
                 dir('backend') {
                     echo 'Installing backend dependencies...'
