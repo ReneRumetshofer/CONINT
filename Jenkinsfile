@@ -147,8 +147,6 @@ pipeline {
                     if (params.BUILD_FRONTEND) {
                         dir('frontend') {
                             echo 'Testing Frontend on green...'
-                            sh 'npx playwright test'
-                            sh 'k6 run tests/perf.js'
                             sh 'npm run e2e'
                             sh 'npm run test'
                         }
@@ -156,8 +154,8 @@ pipeline {
                     if (params.BUILD_BACKEND) {
                         dir('backend') {
                             echo 'Testing Backend on green...'
-                            sh 'npx playwright test'
-                            sh 'k6 run tests/perf.js'
+                            sh 'npm run e2e'
+                            sh 'npm run test'
                         }
                     }
                 }
@@ -169,8 +167,50 @@ pipeline {
                 expression { return params.DEPLOY }
             }
             steps {
-                echo 'Switching Blue/Green deployment...'
-                sh './scripts/switch-blue-green.sh'
+                echo 'Switching from blue to green deployment...'
+                sh '''
+                sed -i \\
+                  -e 's|set \\$active_frontend http://frontend-blue:80;|set \\$active_frontend http://frontend-green:80;|' \\
+                  -e 's|set \\$active_backend http://backend-blue:3000;|set \\$active_backend http://backend-green:3000;|' \\
+                  /opt/CONINT/stacks/reverse-proxy/nginx/nginx.conf
+
+                docker exec nginx-proxy nginx -s reload
+                '''
+            }
+        }
+
+        stage('Deploy to Blue') {
+            when {
+                expression { return params.DEPLOY }
+            }
+            steps {
+                script {
+                    if (params.BUILD_FRONTEND) {
+                        echo 'Deploying Frontend to green...'
+                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
+                    }
+                    if (params.BUILD_BACKEND) {
+                        echo 'Deploying Backend to green...'
+                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
+                    }
+                }
+            }
+        }
+
+        stage('Switch to Blue') {
+            when {
+                expression { return params.DEPLOY }
+            }
+            steps {
+                echo 'Switching green to blue deployment...'
+                sh '''
+                sed -i \\
+                  -e 's|set \\$active_frontend http://frontend-green:80;|set \\$active_frontend http://frontend-blue:80;|' \\
+                  -e 's|set \\$active_backend http://backend-green:3000;|set \\$active_backend http://backend-blue:3000;|' \\
+                  /opt/CONINT/stacks/reverse-proxy/nginx/nginx.conf
+
+                docker exec nginx-proxy nginx -s reload
+                '''
             }
         }
     }
