@@ -42,7 +42,6 @@ pipeline {
             steps {
                 dir('frontend') {
                     echo 'Linting Frontend...'
-                    sh 'npm install'
                     sh 'npm run lint'
 
                     echo 'SonarQube & Snyk Frontend...'
@@ -56,7 +55,6 @@ pipeline {
                 }
                 dir('backend') {
                     echo 'Linting Backend...'
-                    sh 'npm install'
                     sh 'npm run lint'
 
                     echo 'SonarQube & Snyk Backend...'
