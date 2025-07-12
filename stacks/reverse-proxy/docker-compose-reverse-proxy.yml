@@ -14,7 +14,7 @@ services:
     networks:
       - jenkins_jenkins_network
       - portainer_portainer_network
-      - sonarqube_sonar_qube_network
+      - sonarqube_sonarqube_network
       - proxy_network
   blue-green-proxy:
     image: nginx:1.29.0-alpine
@@ -35,6 +35,6 @@ networks:
     external: true
   portainer_portainer_network:
     external: true
-  sonarqube_sonar_qube_network:
+  sonarqube_sonarqube_network:
     external: true
   proxy_network:
