@@ -188,10 +188,10 @@ pipeline {
                 expression { return params.DEPLOY }
             }
             steps {
-                echo 'Deploying Frontend to green...'
+                echo 'Deploying Frontend to blue...'
                 sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
 
-                echo 'Deploying Backend to green...'
+                echo 'Deploying Backend to blue...'
                 sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
             }
         }
