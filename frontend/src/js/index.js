@@ -1,5 +1,3 @@
-const posthog = require('./postHogClient.js');
-
 const API_HOSTS = {
   localhost: "http://localhost:3000/api",
   "staging.conint-securenotes.online":
@@ -15,7 +13,9 @@ const API = API_HOSTS[hostname];
 window.addEventListener('DOMContentLoaded', () => {
   posthog.onFeatureFlags(() => {
     const variant = posthog.getFeatureFlag('new-ui-theme');
+    console.log('Feature flag variant:', variant);
     const button = document.getElementById('createNote');
+    console.log('Button element:', button);
 
     if (button) {
       button.style.backgroundColor = variant === 'green' ? 'green' : 'blue';
