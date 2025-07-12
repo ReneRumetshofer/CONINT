@@ -152,7 +152,6 @@ pipeline {
                 sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
 
                 echo 'Deploying Backend to green...'
-                sh
                 sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green"
                 sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
             }
