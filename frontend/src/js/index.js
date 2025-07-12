@@ -1,9 +1,15 @@
 //const posthog = require("./postHogClient.js");
 
-const API =
-  window.location.hostname === "localhost"
-    ? "http://localhost:3000/api"
-    : "https://prod.conint-securenotes.online/api";
+const API_HOSTS = {
+  localhost: "http://localhost:3000/api",
+  "staging.conint-securenotes.online":
+    "https://staging.conint-securenotes.online/api",
+  "prod.conint-securenotes.online":
+    "https://prod.conint-securenotes.online/api",
+};
+
+const hostname = window.location.hostname;
+const API = API_HOSTS[hostname];
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
@@ -39,8 +45,7 @@ async function loadNote(uuid) {
   );
   const contentBox = document.getElementById(`content-${uuid}`);
   if (res.ok) {
-    const text = await res.text();
-    contentBox.textContent = text;
+    contentBox.textContent = await res.text();
   } else {
     contentBox.textContent = `Fehler: ${res.status} ${await res.text()}`;
   }
