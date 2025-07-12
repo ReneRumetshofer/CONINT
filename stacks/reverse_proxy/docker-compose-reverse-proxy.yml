@@ -27,14 +27,11 @@ services:
       - /opt/CONINT/stacks/reverse-proxy/nginx/conf.d/:/etc/nginx/conf.d/
       - /opt/CONINT/stacks/reverse-proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
     networks:
-      - secret_notes_blue_secure_notes_network
-      - secret_notes_green_secure_notes_network
+      - secret_notes_secret_notes_network
       - proxy_network
 
 networks:
-  secret_notes_blue_secure_notes_network:
-    external: true
-  secret_notes_green_secure_notes_network:
+  secret_notes_secret_notes_network:
     external: true
   jenkins_jenkins_network:
     external: true
