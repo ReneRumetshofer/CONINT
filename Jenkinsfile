@@ -77,7 +77,10 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Docker Images') {
+            when {
+                expression { return params.BUILD_FRONTEND || params.BUILD_BACKEND }
+            }
             steps {
                 script {
                     if (params.BUILD_FRONTEND) {
@@ -87,7 +90,7 @@ pipeline {
                     }
                     if (params.BUILD_BACKEND) {
                         dir('backend') {
-                            sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG -t $FRONTEND_IMAGE:latest ."
+                            sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG -t $BACKEND_IMAGE:latest ."
                         }
                     }
                 }
