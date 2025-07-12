@@ -176,7 +176,7 @@ pipeline {
                   sed -i \
                       -e 's|set \\$active_frontend http://frontend-blue:80;|set \\$active_frontend http://frontend-green:80;|' \
                       -e 's|set \\$active_backend http://backend-blue:3000;|set \\$active_backend http://backend-green:3000;|' \
-                      /etc/nginx/nginx.conf && \
+                      /etc/nginx/conf.d/nginx.conf && \
                   nginx -s reload
                 "
                 '''
@@ -207,7 +207,7 @@ pipeline {
                   sed -i \
                       -e 's|set \\$active_frontend http://frontend-green:80;|set \\$active_frontend http://frontend-blue:80;|' \
                       -e 's|set \\$active_backend http://backend-green:3000;|set \\$active_backend http://backend-blue:3000;|' \
-                      /etc/nginx/nginx.conf && \
+                      /etc/nginx/conf.d/nginx.conf && \
                   nginx -s reload
                 "
                 '''
