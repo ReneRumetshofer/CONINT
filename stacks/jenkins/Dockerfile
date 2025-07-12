@@ -4,7 +4,8 @@ USER root
 
 RUN groupadd -g 992 docker && usermod -aG docker jenkins
 
-RUN apt-get update && \
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get update && \
     apt-get install -y docker.io nodejs
 
 RUN curl -L https://npmjs.org/install.sh | sh
