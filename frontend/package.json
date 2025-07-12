@@ -11,8 +11,7 @@
     "perf": "k6 run test/k6/load-test.js",
     "security-auth": "snyk auth --auth-type=token $SNYK_TOKEN",
     "security": "snyk test",
-    "scan": "sonar-scanner",
-    "scan-jenkins": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN"
+    "scan": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN"
   },
   "author": "Nick Müllner",
   "license": "ISC",

@@ -33,7 +33,7 @@ pipeline {
 
                     echo 'SonarQube & Snyk Frontend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        sh 'npm run scan-jenkins'
+                        sh 'npm run scan'
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
                         sh 'npm run security-auth'
@@ -47,7 +47,7 @@ pipeline {
 
                     echo 'SonarQube & Snyk Backend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        sh 'npm run scan-jenkins'
+                        sh 'npm run scan'
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
                         sh 'npm run security-auth'
