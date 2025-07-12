@@ -22,6 +22,10 @@ test("2. Neue Notiz erfolgreich erstellen", async ({ page }) => {
   await page.fill("#newKey", "1234");
   await page.click('button[type="submit"]');
 
+  page.once("dialog", async (dialog) => {
+    await dialog.accept();
+  });
+
   const newNote = page.locator(".note", { hasText: uniqueTitle });
   await expect(newNote).toBeVisible();
 });

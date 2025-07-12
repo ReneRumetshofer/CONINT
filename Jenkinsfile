@@ -12,7 +12,7 @@ pipeline {
 
     environment {
         SONAR_HOST_URL = 'http://sonarqube:9000'
-        FRONTEND_GREEN = 'http://frontend-green'
+        FRONTEND_GREEN = 'http://frontend-green:80'
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
@@ -148,9 +148,12 @@ pipeline {
             }
             steps {
                 echo 'Deploying Frontend to green...'
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green"
                 sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
 
                 echo 'Deploying Backend to green...'
+                sh
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green"
                 sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
             }
         }
@@ -197,9 +200,11 @@ pipeline {
             }
             steps {
                 echo 'Deploying Frontend to blue...'
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down frontend-blue"
                 sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
 
                 echo 'Deploying Backend to blue...'
+                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue"
                 sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
             }
         }
