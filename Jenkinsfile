@@ -23,7 +23,6 @@ pipeline {
                 dir('frontend') {
                     echo 'Installing frontend dependencies...'
                     sh 'npm ci'
-                    sh 'npx playwright install --with-deps'
                 }
                 dir('backend') {
                     echo 'Installing backend dependencies...'
