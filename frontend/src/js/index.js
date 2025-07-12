@@ -1,15 +1,18 @@
-const posthog = require('./postHogClient.js');
+const posthog = require("./postHogClient.js");
 
-const API = 'http://localhost:3000';
+const API =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://prod.conint-securenotes.online/api";
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
   const notes = await res.json();
-  const container = document.getElementById('notes');
-  container.innerHTML = '';
-  notes.forEach(note => {
-    const div = document.createElement('div');
-    div.className = 'note';
+  const container = document.getElementById("notes");
+  container.innerHTML = "";
+  notes.forEach((note) => {
+    const div = document.createElement("div");
+    div.className = "note";
     div.innerHTML = `
     <strong>${note.title}</strong><br />
     UUID: ${note.notes_uuid}<br />
@@ -20,14 +23,20 @@ async function loadNotes() {
   `;
     container.appendChild(div);
 
-    document.getElementById(`show-${note.notes_uuid}`).addEventListener('click', () => loadNote(note.notes_uuid));
-    document.getElementById(`del-${note.notes_uuid}`).addEventListener('click', () => deleteNote(note.notes_uuid));
+    document
+      .getElementById(`show-${note.notes_uuid}`)
+      .addEventListener("click", () => loadNote(note.notes_uuid));
+    document
+      .getElementById(`del-${note.notes_uuid}`)
+      .addEventListener("click", () => deleteNote(note.notes_uuid));
   });
 }
 
 async function loadNote(uuid) {
   const key = document.getElementById(`key-${uuid}`).value;
-  const res = await fetch(`${API}/notes/${uuid}?key=${encodeURIComponent(key)}`);
+  const res = await fetch(
+    `${API}/notes/${uuid}?key=${encodeURIComponent(key)}`,
+  );
   const contentBox = document.getElementById(`content-${uuid}`);
   if (res.ok) {
     const text = await res.text();
@@ -38,30 +47,30 @@ async function loadNote(uuid) {
 }
 
 async function deleteNote(uuid) {
-  await fetch(`${API}/notes/${uuid}`, { method: 'DELETE' });
+  await fetch(`${API}/notes/${uuid}`, { method: "DELETE" });
   await loadNotes();
 }
 
-document.getElementById('newNoteForm').addEventListener('submit', async (e) => {
+document.getElementById("newNoteForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const title = document.getElementById('newTitle').value;
-  const content = document.getElementById('newContent').value;
-  const key = document.getElementById('newKey').value;
+  const title = document.getElementById("newTitle").value;
+  const content = document.getElementById("newContent").value;
+  const key = document.getElementById("newKey").value;
 
   console.log(key, content, key);
 
   const res = await fetch(`${API}/notes`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, content, key })
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title, content, key }),
   });
 
   if (res.ok) {
-    alert('Notiz erstellt!');
-    document.getElementById('newNoteForm').reset();
+    alert("Notiz erstellt!");
+    document.getElementById("newNoteForm").reset();
     loadNotes();
   } else {
-    alert('Fehler beim Erstellen der Notiz.');
+    alert("Fehler beim Erstellen der Notiz.");
   }
 });
 
