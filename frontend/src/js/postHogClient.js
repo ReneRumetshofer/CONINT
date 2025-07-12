@@ -1,4 +1,4 @@
-const { PostHog } = require('posthog-node');
+/*const { PostHog } = require('posthog-node');
 
 const posthog = new PostHog('phc_ASQ4jxULA4BuJQfLNnCH974PkeqxcLGfzQl2DyYXCjh', {
   host: 'https://eu.posthog.com',
@@ -13,4 +13,4 @@ posthog.capture({
   },
 });
 
-console.log('✅ Event sent to PostHog');
+console.log('✅ Event sent to PostHog');*/

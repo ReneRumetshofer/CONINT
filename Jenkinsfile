@@ -64,11 +64,13 @@ pipeline {
             steps {
                 script {
                     if (params.BUILD_FRONTEND) {
+                        echo 'Testing Frontend...'
                         dir('frontend') {
                             sh 'npm run test'
                         }
                     }
                     if (params.BUILD_BACKEND) {
+                        echo 'Testing Backend...'
                         dir('backend') {
                             sh 'npm run test'
                         }
@@ -84,11 +86,13 @@ pipeline {
             steps {
                 script {
                     if (params.BUILD_FRONTEND) {
+                        echo 'Building Frontend...'
                         dir('frontend') {
                             sh "docker build -t $FRONTEND_IMAGE:$IMAGE_TAG -t $FRONTEND_IMAGE:latest ."
                         }
                     }
                     if (params.BUILD_BACKEND) {
+                        echo 'Building Backend...'
                         dir('backend') {
                             sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG -t $BACKEND_IMAGE:latest ."
                         }
@@ -104,9 +108,11 @@ pipeline {
 
                     script {
                         if (params.BUILD_FRONTEND) {
+                            echo 'Pushing Frontend...'
                             sh "docker push $FRONTEND_IMAGE"
                         }
                         if (params.BUILD_BACKEND) {
+                            echo 'Pushing Backend...'
                             sh "docker push $BACKEND_IMAGE"
                         }
                     }
@@ -114,19 +120,19 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging (Blue/Green)') {
+        stage('Deploy to Green') {
             when {
                 expression { return params.DEPLOY }
             }
             steps {
                 script {
                     if (params.BUILD_FRONTEND) {
-                        echo 'Deploying Frontend...'
-                        sh './scripts/deploy-blue-green.sh frontend'
+                        echo 'Deploying Frontend to green...'
+                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
                     }
                     if (params.BUILD_BACKEND) {
-                        echo 'Deploying Backend...'
-                        sh './scripts/deploy-blue-green.sh backend'
+                        echo 'Deploying Backend to green...'
+                        sh "docker-compose -f stacks/secret-notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
                     }
                 }
             }
@@ -137,9 +143,24 @@ pipeline {
                 expression { return params.DEPLOY }
             }
             steps {
-                echo 'Running E2E (Playwright) and Performance (k6) tests...'
-                sh 'npx playwright test'
-                sh 'k6 run tests/perf.js'
+                script {
+                    if (params.BUILD_FRONTEND) {
+                        dir('frontend') {
+                            echo 'Testing Frontend on green...'
+                            sh 'npx playwright test'
+                            sh 'k6 run tests/perf.js'
+                            sh 'npm run e2e'
+                            sh 'npm run test'
+                        }
+                    }
+                    if (params.BUILD_BACKEND) {
+                        dir('backend') {
+                            echo 'Testing Backend on green...'
+                            sh 'npx playwright test'
+                            sh 'k6 run tests/perf.js'
+                        }
+                    }
+                }
             }
         }
 
