@@ -8,6 +8,6 @@ RUN apt-get update && \
 RUN curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose && \
     chmod +x /usr/local/bin/docker-compose
 
-RUN groupadd -g 992 docker && usermod -aG docker jenkins
+RUN usermod -aG docker jenkins
 
 USER jenkins
