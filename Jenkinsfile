@@ -6,7 +6,8 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'STATIC_TESTS', defaultValue: true, description: 'Statische Code Analyse durchführen?')
+        booleanParam(name: 'STATIC_TESTS', defaultValue: true, description: 'Statische Code Analyse durchführen? (lint, snyk, sonar, unit)')
+        booleanParam(name: 'DYNAMIC_TESTS', defaultValue: true, description: 'Dynamische Tests durchführen? (playwright, k6)')
         booleanParam(name: 'BUILD_FRONTEND', defaultValue: false, description: 'Frontend bauen und pushen?')
         booleanParam(name: 'BUILD_BACKEND', defaultValue: false, description: 'Backend bauen und pushen?')
         booleanParam(name: 'DEPLOY', defaultValue: false, description: 'Erzeugten Build deployen und testen?')
@@ -148,18 +149,18 @@ pipeline {
 
         stage('E2E & Performance Testing') {
             when {
-                expression { return params.DEPLOY }
+                expression { return params.DYNAMIC_TESTS }
             }
             steps {
                 dir('frontend') {
                     echo 'Testing Frontend on green...'
                     sh 'npm run e2e'
-                    sh 'npm run test'
+                    sh 'npm run perf'
                 }
                 dir('backend') {
                     echo 'Testing Backend on green...'
                     sh 'npm run e2e'
-                    sh 'npm run test'
+                    sh 'npm run perf'
                 }
             }
         }
