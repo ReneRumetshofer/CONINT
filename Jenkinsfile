@@ -22,6 +22,19 @@ pipeline {
 
     stages {
 
+        stage('Install Dependencies') {
+            steps {
+                dir('frontend') {
+                    echo 'Installing frontend dependencies...'
+                    sh 'npm ci'
+                }
+                dir('backend') {
+                    echo 'Installing backend dependencies...'
+                    sh 'npm ci'
+                }
+            }
+        }
+
         stage('Lint & Static Analysis') {
             when {
                 expression { return params.STATIC_TESTS }
