@@ -22,6 +22,8 @@ services:
     restart: unless-stopped
     expose:
       - 80
+    volumes:
+      - /opt/CONINT/stacks/reverse-proxy/nginx/:/etc/nginx/nginx.conf
     networks:
       - secret_notes_secure_notes_network
       - proxy_network
