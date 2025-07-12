@@ -9,7 +9,7 @@ export let options = {
   ],
 };
 
-const BASE_URL = process.env.BACKEND_GREEN || "http://localhost:3000";
+const BASE_URL = __ENV.BACKEND_GREEN || "http://localhost:3000";
 
 export default function () {
   group("Notiz erstellen → abrufen → löschen", () => {

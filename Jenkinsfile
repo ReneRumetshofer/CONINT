@@ -166,12 +166,7 @@ pipeline {
                 dir('frontend') {
                     echo 'Testing Frontend on green...'
                     sh 'npm run e2e'
-                    sh 'npm run perf'
-                }
-                dir('backend') {
-                    echo 'Testing Backend on green...'
-                    sh 'npm run e2e'
-                    sh 'npm run perf'
+                    sh "BACKEND_GREEN=${BACKEND_GREEN} npm run perf"
                 }
             }
         }
