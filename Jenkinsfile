@@ -13,7 +13,7 @@ pipeline {
     environment {
         SONAR_HOST_URL = 'http://sonarqube:9000'
         FRONTEND_GREEN = 'http://frontend-green:80'
-        BACKEND_GREEN = 'http://backend-green:3000'
+        BACKEND_GREEN = 'http://backend-green:3000/api'
         FRONTEND_IMAGE = 'nick7152/secret-notes-frontend'
         BACKEND_IMAGE = 'nick7152/secret-notes-backend'
     }
