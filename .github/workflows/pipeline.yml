@@ -185,7 +185,8 @@ jobs:
       - name: Run Playwright E2E Tests
         run: npm run playwright
         env:
-          BASE_URL: https://staging.conint-securenotes.online
+          FRONTEND_GREEN: https://staging.conint-securenotes.online
+          BACKEND_GREEN: https://staging.conint-securenotes.online/api
 
       - name: Install k6
         run: |
@@ -195,7 +196,7 @@ jobs:
           sudo apt install -y k6
 
       - name: Run k6 Performance Tests
-        run: npm run k6
+        run: BACKEND_GREEN=${BACKEND_GREEN} npm run k6
 
 
   switch-green-blue:
@@ -236,15 +237,15 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
-          envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
+          envs: BLUE_BACKEND_TAG,BLUE_FRONTEND_TAG
           script: |
             cd /opt/CONINT && \
             echo 'Deploying Frontend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-blue && \
-            IMAGE_TAG=${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue && \
+            IMAGE_TAG=${BLUE_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue && \
             echo 'Deploying Backend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue && \
-            IMAGE_TAG=${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue
+            IMAGE_TAG=${BLUE_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue
 
       - name: Switch back to Blue
         uses: appleboy/ssh-action@v1
