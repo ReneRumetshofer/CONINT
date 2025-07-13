@@ -11,7 +11,7 @@ const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
 
 if (typeof posthog !== "undefined") {
-  posthog.identify("my-unique-user-id");
+  posthog.identify("my-unique-user-id"); // eslint-disable no-undef
 }
 
 async function loadNotes() {
@@ -85,8 +85,10 @@ async function initializeDOMInteractions() {
       }
     });
   if (typeof posthog !== "undefined") {
+    /* eslint-disable no-undef */
     posthog.onFeatureFlags(() => {
       const variant = posthog.getFeatureFlag("new-ui-theme");
+      /* eslint-enable no-undef */
       console.log("Feature flag variant:", variant);
       const button = document.getElementById("createNote");
       console.log("Button element:", button);
