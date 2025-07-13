@@ -17,6 +17,9 @@
   "scripts": {
     "test": "dotenv -e .env -- jest --coverage",
     "lint": "eslint index.js routes/ services/ db/ __tests__/",
+    "security-auth": "snyk auth --auth-type=token $SNYK_TOKEN",
+    "security": "snyk test",
+    "scan": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN",
     "start:dev": "nodemon --env-file .env index.js",
     "start": "node --env-file .env index.js"
   },
@@ -42,6 +45,7 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
     "snyk": "^1.1297.3",
-    "supertest": "^7.1.1"
+    "supertest": "^7.1.1",
+    "sonar-scanner": "^3.1.0"
   }
 }
