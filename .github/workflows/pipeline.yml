@@ -186,7 +186,6 @@ jobs:
         run: npm run playwright
         env:
           FRONTEND_GREEN: https://staging.conint-securenotes.online
-          BACKEND_GREEN: https://staging.conint-securenotes.online/api
 
       - name: Install k6
         run: |
@@ -196,6 +195,8 @@ jobs:
           sudo apt install -y k6
 
       - name: Run k6 Performance Tests
+        env:
+          BACKEND_GREEN: https://staging.conint-securenotes.online/api
         run: BACKEND_GREEN=${BACKEND_GREEN} npm run k6
 
 
