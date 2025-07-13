@@ -56,7 +56,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Snyk test
-        run: snyk test --all-projects --org=${{ secrets.SNYK_ORG }}
+        run: npm run snyk -- --all-projects --org=${{ secrets.SNYK_ORG }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -71,7 +71,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
       - run: npm ci
-      - run: npm run test -- --coverage
+      - run: npm run eslint
+      - run: npm run jest
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
@@ -89,7 +90,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
       - run: npm ci
-      - run: npm run test -- --coverage
+      - run: npm run eslint
+      - run: npm run jest
       - name: Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
@@ -158,7 +160,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright E2E Tests
-        run: npm run e2e
+        run: npm run playwright
         env:
           BASE_URL: https://staging.conint-securenotes.online
 
@@ -170,7 +172,7 @@ jobs:
           sudo apt install -y k6
 
       - name: Run k6 Performance Tests
-        run: npm run perf
+        run: npm run k6
 
 
   switch-green-blue:
