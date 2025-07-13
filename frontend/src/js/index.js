@@ -10,7 +10,9 @@ const API_HOSTS = {
 const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
 
-posthog.identify("my-unique-user-id");
+if (typeof posthog !== "undefined") {
+  posthog.identify("my-unique-user-id");
+}
 
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
@@ -82,17 +84,18 @@ async function initializeDOMInteractions() {
         alert("Fehler beim Erstellen der Notiz.");
       }
     });
+  if (typeof posthog !== "undefined") {
+    posthog.onFeatureFlags(() => {
+      const variant = posthog.getFeatureFlag("new-ui-theme");
+      console.log("Feature flag variant:", variant);
+      const button = document.getElementById("createNote");
+      console.log("Button element:", button);
 
-  posthog.onFeatureFlags(() => {
-    const variant = posthog.getFeatureFlag("new-ui-theme");
-    console.log("Feature flag variant:", variant);
-    const button = document.getElementById("createNote");
-    console.log("Button element:", button);
-
-    if (button) {
-      button.style.backgroundColor = variant === "variant" ? "green" : "blue";
-    }
-  });
+      if (button) {
+        button.style.backgroundColor = variant === "variant" ? "green" : "blue";
+      }
+    });
+  }
 
   loadNotes();
 }
