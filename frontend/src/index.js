@@ -95,6 +95,14 @@ async function initializeDOMInteractions(isLoadNotes) {
         button.style.backgroundColor = variant === "variant" ? "green" : "blue";
       }
     });
+
+    // Update immediately if flags already loaded
+    updateButtonColor();
+
+    // Listen for flag changes
+    posthog.onFeatureFlags(() => {
+      updateButtonColor();
+    });
   }
 
   if (isLoadNotes) {
