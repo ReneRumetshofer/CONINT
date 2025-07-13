@@ -38,8 +38,6 @@
     "eslint": "^9.31.0",
     "babel-jest": "^30.0.4",
     "globals": "^16.3.0",
-    "dotenv": "^17.2.0",
-    "dotenv-cli": "^8.0.0",
     "jest": "^30.0.4",
     "jest-environment-node": "^30.0.4",
     "prettier": "^3.6.2",
