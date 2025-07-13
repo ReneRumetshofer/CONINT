@@ -23,97 +23,97 @@ jobs:
             cd /opt/CONINT && \
             sudo git pull
 
-#  sonarqube_scan_backend:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: SonarSource/sonarqube-scan-action@v5
-#        with:
-#          args: -Dsonar.projectBaseDir=backend
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-#      - uses: SonarSource/sonarqube-quality-gate-action@v1
-#        with:
-#          scanMetadataReportFile: backend/.scannerwork/report-task.txt
-#        timeout-minutes: 5
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#
-#  sonarqube_scan_frontend:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: SonarSource/sonarqube-scan-action@v5
-#        with:
-#          args: -Dsonar.projectBaseDir=frontend
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-#      - uses: SonarSource/sonarqube-quality-gate-action@v1
-#        with:
-#          scanMetadataReportFile: frontend/.scannerwork/report-task.txt
-#        timeout-minutes: 5
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#
-#  vulnerability_scan:
-#    name: Snyk Vulnerability Scan
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@main
-#      - uses: snyk/actions/setup@master
-#      - uses: actions/setup-node@v4
-#      - name: Snyk monitor
-#        run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG }}
-#        env:
-#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-#      - name: Snyk test
-#        run: snyk test --all-projects --org=${{ secrets.SNYK_ORG }}
-#        env:
-#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-#
-#  test-backend:
-#    name: Backend Unit Tests
-#    runs-on: ubuntu-latest
-#    needs: [ sonarqube_scan_backend, sonarqube_scan_frontend, vulnerability_scan ]
-#    defaults:
-#      run:
-#        working-directory: backend
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-node@v4
-#      - run: npm ci
-#      - run: npm run eslint
-#      - run: npm run jest
-#      - name: Archive code coverage results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: backend-coverage-report
-#          path: backend/coverage/lcov-report
-#
-#  test-frontend:
-#    name: Frontend Unit Tests
-#    runs-on: ubuntu-latest
-#    needs: [ sonarqube_scan_backend, sonarqube_scan_frontend, vulnerability_scan ]
-#    defaults:
-#      run:
-#        working-directory: frontend
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-node@v4
-#      - run: npm ci
-#      - run: npm run eslint
-#      - run: npm run jest
-#      - name: Archive code coverage results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: frontend-coverage-report
-#          path: frontend/coverage/lcov-report
-#
+  sonarqube_scan_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          args: -Dsonar.projectBaseDir=backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - uses: SonarSource/sonarqube-quality-gate-action@v1
+        with:
+          scanMetadataReportFile: backend/.scannerwork/report-task.txt
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  sonarqube_scan_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          args: -Dsonar.projectBaseDir=frontend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - uses: SonarSource/sonarqube-quality-gate-action@v1
+        with:
+          scanMetadataReportFile: frontend/.scannerwork/report-task.txt
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  vulnerability_scan:
+    name: Snyk Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-node@v4
+      - name: Snyk monitor
+        run: snyk monitor --all-projects --org=${{ secrets.SNYK_ORG }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Snyk test
+        run: snyk test --all-projects --org=${{ secrets.SNYK_ORG }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  test-backend:
+    name: Backend Unit Tests
+    runs-on: ubuntu-latest
+    needs: [ sonarqube_scan_backend, sonarqube_scan_frontend, vulnerability_scan ]
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - run: npm run eslint
+      - run: npm run jest
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage-report
+          path: backend/coverage/lcov-report
+
+  test-frontend:
+    name: Frontend Unit Tests
+    runs-on: ubuntu-latest
+    needs: [ sonarqube_scan_backend, sonarqube_scan_frontend, vulnerability_scan ]
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - run: npm run eslint
+      - run: npm run jest
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage/lcov-report
+
   build-deliver-backend-image:
     name: Build & Deliver Backend Image
-    #needs: test-backend
+    needs: test-backend
     secrets: inherit
     uses: ./.github/workflows/build-and-deliver.yml
     with:
@@ -123,7 +123,7 @@ jobs:
 
   build-deliver-frontend-image:
     name: Build & Deliver Frontend Image
-    #needs: test-frontend
+    needs: test-frontend
     secrets: inherit
     uses: ./.github/workflows/build-and-deliver.yml
     with:
@@ -179,13 +179,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-#      - name: Install Playwright Browsers
-#        run: npx playwright install --with-deps
-#
-#      - name: Run Playwright E2E Tests
-#        run: npm run playwright
-#        env:
-#          FRONTEND_GREEN: https://staging.conint-securenotes.online
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E Tests
+        run: npm run playwright
+        env:
+          FRONTEND_GREEN: https://staging.conint-securenotes.online
 
       - name: Install k6
         run: |
