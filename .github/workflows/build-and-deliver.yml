@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  DOCKERHUB_USERNAME: renerumetshofer
+  DOCKERHUB_USERNAME: nick7152
 
 jobs:
   build-image:
@@ -43,7 +43,6 @@ jobs:
   push-backend-image:
     name: Push Docker Image
     needs: build-image
-#    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
       - name: Download image artifact

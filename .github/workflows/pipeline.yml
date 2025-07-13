@@ -105,13 +105,23 @@ jobs:
     uses: ./.github/workflows/build-and-deliver.yml
     with:
       working-directory: backend
-      dockerhub-repository: conint-securenotes-backend
+      dockerhub-repository: secret-notes-backend
       image-artifact-name: backend-image
+
+  build-deliver-frontend-image:
+    name: Build & Deliver Frontend Image
+    needs: test-frontend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: frontend
+      dockerhub-repository: secret-notes-frontend
+      image-artifact-name: frontend-image
 
   deploy-green:
     name: Deploy new Green version
     runs-on: ubuntu-latest
-    needs: build-deliver-backend-image
+    needs: [ build-deliver-backend-image, build-deliver-frontend-image ]
     #if: github.ref == 'refs/heads/production'
     outputs:
       image-tag: ${{ steps.tag.outputs.image-tag }}
