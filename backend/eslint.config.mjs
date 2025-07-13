@@ -7,24 +7,18 @@ export default defineConfig([
     files: ['**/*.{js,mjs,cjs}'],
     plugins: { js },
     extends: ['js/recommended'],
-  },
-  {
-    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.browser,
         process: 'readonly',
         Buffer: 'readonly',
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        jest: 'readonly',
-        afterEach: 'readonly',
       },
     },
   },
   {
-    ignores: ['**/bootstrap**.js'],
+    files: ['**/*.spec.js'],
+    languageOptions: {
+      globals: globals.jest,
+    },
   },
 ]);

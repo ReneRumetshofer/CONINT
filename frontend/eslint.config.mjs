@@ -7,12 +7,16 @@ export default defineConfig([
     files: ["**/*.{js,mjs,cjs}"],
     plugins: { js },
     extends: ["js/recommended"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
   },
   {
-    files: ["**/*.{js,mjs,cjs}"],
-    languageOptions: { globals: globals.browser },
-  },
-  {
-    ignores: ["**/bootstrap**.js"],
+    files: ["**/tests/jest/*.js"],
+    languageOptions: {
+      globals: globals.jest,
+    },
   },
 ]);

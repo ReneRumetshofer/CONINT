@@ -123,6 +123,8 @@ describe('Notes routes IT', () => {
     );
 
     expect(res.statusCode).toBe(403);
-    expect(res.text).toBe('Key is invalid');
+    expect(res.text).toBe(
+      'Key is invalid: Error: Unsupported state or unable to authenticate data'
+    );
   });
 });

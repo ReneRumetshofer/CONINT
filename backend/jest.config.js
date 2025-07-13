@@ -1,5 +1,5 @@
 export default {
-  module: 'node',
+  testEnvironment: 'node',
   transform: {
     '^.+\\.(js|jsx)$': 'babel-jest',
   },

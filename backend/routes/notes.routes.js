@@ -35,7 +35,6 @@ async function routes(fastify) {
     },
   };
   fastify.get('/api/notes/:uuid', getNoteOpts, async (request, reply) => {
-    console.log(request.query);
     fastify.pg.query(
       'SELECT content FROM notes WHERE notes_uuid = $1',
       [request.params.uuid],
@@ -52,8 +51,7 @@ async function routes(fastify) {
         try {
           reply.send(decryptNote(request.query.key, result.rows[0].content));
         } catch (err) {
-          console.log(err);
-          reply.code(403).send('Key is invalid');
+          reply.code(403).send('Key is invalid: ' + err);
         }
       }
     );
