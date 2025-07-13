@@ -90,12 +90,11 @@ test("8. Felder werden nach erfolgreicher Notizerstellung geleert", async ({
   await expect(page.locator("#newKey")).toHaveValue("");
 });
 
-test('9. Leere Seite zeigt "keine Notizen" (optional)', async ({ page }) => {
+test('9. Leere Seite zeigt keine Notizen-Elemente', async ({ page }) => {
   const noteCount = await page.locator(".note").count();
-  if (noteCount === 0) {
-    await expect(page.locator("#notes")).toContainText(/keine/i);
-  }
+  expect(noteCount).toBe(0);
 });
+
 
 test("10. Notiz löschen und sicherstellen, dass sie nicht mehr abrufbar ist", async ({
   page,
