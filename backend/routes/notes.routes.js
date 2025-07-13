@@ -4,7 +4,7 @@ import {
   decryptNote,
 } from '../services/crypto.service.js';
 
-async function routes(fastify, options) {
+async function routes(fastify) {
   fastify.get('/api/notes', async (request, reply) => {
     fastify.pg.query(
       'SELECT notes_uuid, title FROM notes',
@@ -51,7 +51,9 @@ async function routes(fastify, options) {
 
         try {
           reply.send(decryptNote(request.query.key, result.rows[0].content));
+          /* eslint-disable no-unused-vars */
         } catch (err) {
+          /* eslint-enable no-unused-vars */
           reply.code(403).send('Key is invalid');
         }
       }
@@ -88,7 +90,9 @@ async function routes(fastify, options) {
     });
   });
 
+  /* eslint-disable no-unused-vars */
   const deleteNotesOpts = {
+    /* eslint-enable no-unused-vars */
     schema: {
       params: {
         type: 'object',

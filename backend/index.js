@@ -23,7 +23,7 @@ await fastify.register(cors, {
 fastify.register(dbConnector);
 fastify.register(notesRoutes);
 
-fastify.listen({ port: 3000, host: '0.0.0.0' }, function (err, address) {
+fastify.listen({ port: 3000, host: '0.0.0.0' }, function (err) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
