@@ -160,7 +160,8 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                             sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                             echo 'Pushing Frontend...'
-                            sh "docker push $FRONTEND_IMAGE"
+                            sh "docker push $FRONTEND_IMAGE:latest"
+                            sh "docker push $FRONTEND_IMAGE:$IMAGE_TAG"
                         }
                     }
                 }
@@ -172,7 +173,8 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                             sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                             echo 'Pushing Backend...'
-                            sh "docker push $BACKEND_IMAGE"
+                            sh "docker push $BACKEND_IMAGE:latest"
+                            sh "docker push $BACKEND_IMAGE:$IMAGE_TAG"
                         }
                     }
                 }
