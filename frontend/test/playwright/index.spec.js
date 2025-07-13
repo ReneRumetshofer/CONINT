@@ -90,10 +90,23 @@ test("8. Felder werden nach erfolgreicher Notizerstellung geleert", async ({
   await expect(page.locator("#newKey")).toHaveValue("");
 });
 
-/*test('9. Leere Seite zeigt keine Notizen-Elemente', async ({ page }) => {
-  const noteCount = await page.locator(".note").count();
-  expect(noteCount).toBe(0);
-});*/
+test("9. Leerer Titel verhindert Erstellung der Notiz", async ({ page }) => {
+  const initialCount = await page.locator(".note").count();
+
+  await page.fill("#newContent", "Inhalt ohne Titel");
+  await page.fill("#newKey", "nokey");
+
+  await page.click('button[type="submit"]');
+
+  // Kurz warten, falls die App asynchron etwas versucht
+  await page.waitForTimeout(500);
+
+  const finalCount = await page.locator(".note").count();
+  expect(finalCount).toBe(initialCount);
+});
+
+
+
 
 test("10. Notiz löschen und sicherstellen, dass sie nicht mehr abrufbar ist", async ({
   page,
