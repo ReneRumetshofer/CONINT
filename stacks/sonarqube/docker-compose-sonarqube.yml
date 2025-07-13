@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   sonarqube:
     image: sonarqube:25.7.0.110598-community
