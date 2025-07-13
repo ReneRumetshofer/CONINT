@@ -11,7 +11,7 @@ const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
 
 if (typeof posthog !== "undefined") {
-  posthog.identify("my-unique-user-id"); // eslint-disable no-undef
+  posthog.identify("my-unique-user-id"); // eslint-disable-line no-undef
 }
 
 async function loadNotes() {
