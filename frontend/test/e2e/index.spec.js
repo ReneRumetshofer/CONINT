@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 const BASE_URL = process.env.FRONTEND_GREEN || "http://localhost:80";
 
