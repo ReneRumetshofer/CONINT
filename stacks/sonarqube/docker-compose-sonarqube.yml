@@ -10,8 +10,6 @@ services:
     expose:
       - 9000
     environment:
-      SONAR_WEB_JAVA_OPTS: "-Xmx512m -Xms256m"
-      SONAR_ES_JAVA_OPTS: "-Xmx512m -Xms256m"
       SONAR_JDBC_URL: jdbc:postgresql://sonarqube_db:5432/sonarqube
       SONAR_JDBC_USERNAME: sonar
       SONAR_JDBC_PASSWORD: sonarpassword
