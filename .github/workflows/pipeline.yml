@@ -111,60 +111,60 @@ jobs:
 #          name: frontend-coverage-report
 #          path: frontend/coverage/lcov-report
 #
-#  build-deliver-backend-image:
-#    name: Build & Deliver Backend Image
-#    needs: test-backend
-#    secrets: inherit
-#    uses: ./.github/workflows/build-and-deliver.yml
-#    with:
-#      working-directory: backend
-#      dockerhub-repository: secret-notes-backend
-#      image-artifact-name: backend-image
-#
-#  build-deliver-frontend-image:
-#    name: Build & Deliver Frontend Image
-#    needs: test-frontend
-#    secrets: inherit
-#    uses: ./.github/workflows/build-and-deliver.yml
-#    with:
-#      working-directory: frontend
-#      dockerhub-repository: secret-notes-frontend
-#      image-artifact-name: frontend-image
-#
-#  deploy-green:
-#    name: Deploy new Green version
-#    runs-on: ubuntu-latest
-#    needs: [ build-deliver-backend-image, build-deliver-frontend-image, update-local-repo ]
-#    #if: github.ref == 'refs/heads/production'
-#    outputs:
-#      image-tag: ${{ steps.tag.outputs.image-tag }}
-#    steps:
-#      - name: Get commit SHA
-#        id: tag
-#        run: echo "image-tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
-#      - name: Deploy new green version
-#        uses: appleboy/ssh-action@v1
-#        env:
-#          GREEN_BACKEND_TAG: ${{ steps.tag.outputs.image-tag }}
-#          GREEN_FRONTEND_TAG: ${{ steps.tag.outputs.image-tag }}
-#        with:
-#          host: ${{ secrets.DEPLOY_HOST }}
-#          username: ${{ secrets.DEPLOY_HOST_USERNAME }}
-#          key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
-#          envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
-#          script: |
-#            cd /opt/CONINT && \
-#            echo 'Deploying Frontend to green...' && \
-#            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green && \
-#            IMAGE_TAG=${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green && \
-#            echo 'Deploying Backend to green...' && \
-#            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green && \
-#            IMAGE_TAG=${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green
-#
+  build-deliver-backend-image:
+    name: Build & Deliver Backend Image
+    #needs: test-backend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: backend
+      dockerhub-repository: secret-notes-backend
+      image-artifact-name: backend-image
+
+  build-deliver-frontend-image:
+    name: Build & Deliver Frontend Image
+    #needs: test-frontend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: frontend
+      dockerhub-repository: secret-notes-frontend
+      image-artifact-name: frontend-image
+
+  deploy-green:
+    name: Deploy new Green version
+    runs-on: ubuntu-latest
+    needs: [ build-deliver-backend-image, build-deliver-frontend-image, update-local-repo ]
+    #if: github.ref == 'refs/heads/production'
+    outputs:
+      image-tag: ${{ steps.tag.outputs.image-tag }}
+    steps:
+      - name: Get commit SHA
+        id: tag
+        run: echo "image-tag=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+      - name: Deploy new green version
+        uses: appleboy/ssh-action@v1
+        env:
+          GREEN_BACKEND_TAG: ${{ steps.tag.outputs.image-tag }}
+          GREEN_FRONTEND_TAG: ${{ steps.tag.outputs.image-tag }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_HOST_USERNAME }}
+          key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
+          envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
+          script: |
+            cd /opt/CONINT && \
+            echo 'Deploying Frontend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green && \
+            IMAGE_TAG=${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green && \
+            echo 'Deploying Backend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green && \
+            IMAGE_TAG=${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green
+
   e2e-and-performance-tests:
     name: E2E & Performance Tests
     runs-on: ubuntu-latest
-#    needs: deploy-green
+    needs: deploy-green
     defaults:
       run:
         working-directory: frontend
