@@ -79,7 +79,7 @@ jobs:
   test-frontend:
     name: Frontend Unit Tests
     runs-on: ubuntu-latest
-    needs: [ sast, vulnerability_scan ]
+    needs: [ sonarqube_scan_backend, sonarqube_scan_frontend, vulnerability_scan ]
     defaults:
       run:
         working-directory: frontend
