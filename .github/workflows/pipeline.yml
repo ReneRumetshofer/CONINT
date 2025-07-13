@@ -10,6 +10,19 @@ env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/backend
 
 jobs:
+  update-local-repo:
+    name: Update repo on host
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_HOST_USERNAME }}
+          key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
+          script: |
+            cd /opt/CONINT && \
+            sudo git pull
+
   sonarqube_scan_backend:
     runs-on: ubuntu-latest
     steps:
