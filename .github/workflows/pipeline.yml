@@ -12,15 +12,11 @@ env:
 jobs:
   sonarqube_scan_backend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - uses: actions/checkout@v4
       - uses: SonarSource/sonarqube-scan-action@v5
         with:
-          args: >
-            -Dsonar.sources=backend
+          args: -Dsonar.projectBaseDir=backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -31,15 +27,11 @@ jobs:
 
   sonarqube_scan_frontend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
       - uses: actions/checkout@v4
       - uses: SonarSource/sonarqube-scan-action@v5
         with:
-          args: >
-            -Dsonar.sources=frontend
+          args: -Dsonar.projectBaseDir=frontend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
