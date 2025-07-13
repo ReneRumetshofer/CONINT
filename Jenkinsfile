@@ -46,7 +46,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                         sh 'npm run scan'
                     }
-                    timeout(time: 1, unit: 'HOURS') {
+                    timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
@@ -62,7 +62,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                         sh 'npm run scan'
                     }
-                    timeout(time: 1, unit: 'HOURS') {
+                    timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
