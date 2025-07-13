@@ -8,5 +8,5 @@ module.exports = defineConfig({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     },
   },
-  testDir: "./test/e2e",
+  testDir: "./test/playwright",
 });
