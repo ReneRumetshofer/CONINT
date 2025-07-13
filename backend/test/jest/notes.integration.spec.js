@@ -43,13 +43,10 @@ describe('Notes routes IT', () => {
         const client = {
           query: async (sql, params) => {
             if (sql.startsWith('INSERT INTO notes')) {
-              console.log(sql);
               const [uuid, title, encrypted] = params;
               mockNotes.set(uuid, { uuid, title, encrypted });
-            } else {
-              if (sql.startsWith('DELETE FROM notes')) {
-                mockNotes.delete(params[0]);
-              }
+            } else if (sql.startsWith('DELETE FROM notes')) {
+              mockNotes.delete(params[0]);
             }
           },
         };
