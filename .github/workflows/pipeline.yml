@@ -56,7 +56,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Snyk test
-        run: npm run snyk -- --all-projects --org=${{ secrets.SNYK_ORG }}
+        run: snyk test --all-projects --org=${{ secrets.SNYK_ORG }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
