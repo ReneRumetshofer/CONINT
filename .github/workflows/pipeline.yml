@@ -18,9 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          args: >
-            -Dsonar.sources=backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -37,9 +34,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          args: >
-            -Dsonar.sources=frontend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
