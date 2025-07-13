@@ -44,7 +44,9 @@ pipeline {
 
                     echo 'SonarQube & Snyk Frontend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        sh 'npm run scan'
+                        withSonarQubeEnv('SonarQube') {
+                            sh 'npm run scan'
+                        }
                     }
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
@@ -60,7 +62,9 @@ pipeline {
 
                     echo 'SonarQube & Snyk Backend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        sh 'npm run scan'
+                        withSonarQubeEnv('SonarQube') {
+                            sh 'npm run scan'
+                        }
                     }
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
