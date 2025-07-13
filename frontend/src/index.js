@@ -68,8 +68,6 @@ async function initializeDOMInteractions(isLoadNotes) {
       const content = document.getElementById("newContent").value;
       const key = document.getElementById("newKey").value;
 
-      console.log(key, content, key);
-
       const res = await fetch(`${API}/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
