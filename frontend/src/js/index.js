@@ -86,6 +86,6 @@ async function initializeDOMInteractions() {
   loadNotes();
 }
 
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 module.exports = { initializeDOMInteractions, loadNotes, loadNote, deleteNote };
-/* eslint-enable no-unused-vars */
+/* eslint-enable no-undef */
