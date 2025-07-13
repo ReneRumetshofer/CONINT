@@ -86,4 +86,6 @@ async function initializeDOMInteractions() {
   loadNotes();
 }
 
+/* eslint-disable no-unused-vars */
 module.exports = { initializeDOMInteractions, loadNotes, loadNote, deleteNote };
+/* eslint-enable no-unused-vars */
