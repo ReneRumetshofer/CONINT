@@ -107,11 +107,13 @@ jobs:
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
           envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
           script: |
-            cd deployment
-            sed -i "s/^GREEN_BACKEND_TAG=.*/GREEN_BACKEND_TAG=${GREEN_BACKEND_TAG}/" .env
-            sed -i "s/^GREEN_FRONTEND_TAG=.*/GREEN_FRONTEND_TAG=${GREEN_FRONTEND_TAG}/" .env
-            docker-compose pull green
-            docker-compose up -d green
+            cd /opt/CONINT && \
+            echo 'Deploying Frontend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green && \
+            IMAGE_TAG=${{ GREEN_FRONTEND_TAG }} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green && \
+            echo 'Deploying Backend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green && \
+            IMAGE_TAG=${{ GREEN_BACKEND_TAG }} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green
 
   e2e-and-performance-tests:
     name: E2E & Performance Tests
@@ -163,10 +165,12 @@ jobs:
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
           script: |
-            cd deployment/nginx/conf.d
-            rm -f prod.conf
-            ln -s green.conf prod.conf
-            docker exec blue-green-proxy nginx -s reload
+            docker exec blue-green-proxy sh -c "
+            sed -i \
+              -e 's|set \\$active_frontend http://frontend-blue:80;|set \\$active_frontend http://frontend-green:80;|' \
+              -e 's|set \\$active_backend http://backend-blue:3000;|set \\$active_backend http://backend-green:3000;|' \
+              /etc/nginx/conf.d/blue-green.conf && \
+            nginx -s reload"
 
   update-blue:
     name: Update Blue version and switch back to Blue
@@ -183,16 +187,21 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           BLUE_BACKEND_TAG: ${{ steps.tag.outputs.image-tag }}
+          BLUE_FRONTEND_TAG: ${{ steps.tag.outputs.image-tag }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
-          envs: BLUE_BACKEND_TAG
+          envs: GREEN_BACKEND_TAG,GREEN_FRONTEND_TAG
           script: |
-            cd deployment
-            sed -i "s/^BLUE_BACKEND_TAG=.*/BLUE_BACKEND_TAG=${BLUE_BACKEND_TAG}/" .env
-            docker-compose pull blue
-            docker-compose up -d blue
+            cd /opt/CONINT && \
+            echo 'Deploying Frontend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-blue && \
+            IMAGE_TAG=${{ GREEN_FRONTEND_TAG }} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue && \
+            echo 'Deploying Backend to green...' && \
+            docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue && \
+            IMAGE_TAG=${{ GREEN_BACKEND_TAG }} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue
+
       - name: Switch back to Blue
         uses: appleboy/ssh-action@v1
         with:
@@ -200,7 +209,9 @@ jobs:
           username: ${{ secrets.DEPLOY_HOST_USERNAME }}
           key: ${{ secrets.DEPLOY_HOST_SSH_KEY }}
           script: |
-            cd deployment/nginx/conf.d
-            rm -f prod.conf
-            ln -s blue.conf prod.conf
-            docker exec blue-green-proxy nginx -s reload
+            docker exec blue-green-proxy sh -c "
+            sed -i \
+              -e 's|set \\$active_frontend http://frontend-green:80;|set \\$active_frontend http://frontend-blue:80;|' \
+              -e 's|set \\$active_backend http://backend-green:3000;|set \\$active_backend http://backend-blue:3000;|' \
+              /etc/nginx/conf.d/blue-green.conf && \
+            nginx -s reload"
