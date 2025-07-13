@@ -103,5 +103,12 @@ async function initializeDOMInteractions() {
 }
 
 /* eslint-disable no-undef */
-module.exports = { initializeDOMInteractions, loadNotes, loadNote, deleteNote };
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = {
+    initializeDOMInteractions,
+    loadNotes,
+    loadNote,
+    deleteNote,
+  };
+}
 /* eslint-enable no-undef */
