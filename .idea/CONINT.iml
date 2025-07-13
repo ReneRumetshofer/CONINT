@@ -9,8 +9,10 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/frontend/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/frontend/test-results" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/.scannerwork" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
       <excludeFolder url="file://$MODULE_DIR$/backend/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/.scannerwork" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
