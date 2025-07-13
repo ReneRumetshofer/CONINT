@@ -40,14 +40,17 @@
 
   <h2>Neue Notiz erstellen</h2>
   <form id="newNoteForm">
+    <label for="newTitle"></label>
     <input id="newTitle" placeholder="Titel" required type="text" />
+    <label for="newContent"></label>
     <textarea id="newContent" placeholder="Inhalt" required></textarea>
+    <label for="newKey"></label>
     <input id="newKey" placeholder="Verschlüsselungs-Key" required type="text" />
     <button id="createNote" type="submit">Erstellen</button>
   </form>
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/posthog-js@2/dist/posthog.min.js"></script> -->
-  <script type="module" src="js/index.js"></script>
+  <script type="module" src="index.js"></script>
   <script>
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => {

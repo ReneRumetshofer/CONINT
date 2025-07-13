@@ -3,7 +3,7 @@ const {
   loadNotes,
   loadNote,
   deleteNote,
-} = require("../../src/js/index.js");
+} = require("../../src/index.js");
 
 beforeEach(() => {
   document.body.innerHTML = `

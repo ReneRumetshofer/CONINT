@@ -1,12 +1,7 @@
 # Project
 .idea
 
-# Backend
-
-# Frontend
-frontend/node_modules
-frontend/test-results
-frontend/coverage
-
-# Node
-/node_modules
+# Backend & Frontend
+**/node_modules
+**/test-results
+**/coverage

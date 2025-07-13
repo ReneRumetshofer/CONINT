@@ -1,20 +1,29 @@
 {
   "name": "secret-notes-frontend",
   "version": "1.0.0",
-  "description": "Frontend für Secret Notes",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "live-server src",
-    "lint": "eslint src/",
-    "test": "jest --coverage",
-    "e2e": "playwright test",
-    "perf": "k6 run test/k6/load-test.js",
-    "security-auth": "snyk auth --auth-type=token $SNYK_TOKEN",
-    "security": "snyk test",
-    "scan": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN"
+  "description": "Safe notes frontend for CONINT ILV 2025",
+  "homepage": "https://github.com/ReneRumetshofer/CONINT#readme",
+  "bugs": {
+    "url": "https://github.com/ReneRumetshofer/CONINT/issues"
   },
-  "author": "Nick Müllner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReneRumetshofer/CONINT.git"
+  },
   "license": "ISC",
+  "type": "module",
+  "main": "src/index.html",
+  "scripts": {
+    "eslint": "eslint src/",
+    "sonar-scanner": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN",
+    "snyk-auth": "snyk auth --auth-type=token $SNYK_TOKEN",
+    "snyk": "snyk test",
+    "jest": "jest --coverage",
+    "playwright": "playwright test",
+    "k6": "k6 run test/k6/load-test.js",
+    "start-compose-v1": "docker-compose -f ../docker-compose.yaml up -d --build frontend",
+    "start-compose-v2": "docker compose -f ../docker-compose.yaml up -d --build frontend"
+  },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@jest/globals": "^30.0.4",
@@ -24,7 +33,6 @@
     "jest": "^30.0.4",
     "jest-environment-jsdom": "^30.0.4",
     "k6": "^0.0.0",
-    "live-server": "^1.2.2",
     "playwright": "^1.54.1",
     "posthog-js": "^1.257.0",
     "snyk": "^1.1297.3",

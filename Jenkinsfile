@@ -40,39 +40,39 @@ pipeline {
             steps {
                 dir('frontend') {
                     echo 'Linting Frontend...'
-                    sh 'npm run lint'
+                    sh 'npm run eslint'
 
                     echo 'SonarQube & Snyk Frontend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
-                            sh 'npm run scan'
+                            sh 'npm run sonar-scanner'
                         }
                     }
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
-                        sh 'npm run security-auth'
+                        sh 'npm run snyk-auth'
                     }
-                    sh 'npm run security'
+                    sh 'npm run snyk'
                 }
                 dir('backend') {
                     echo 'Linting Backend...'
-                    sh 'npm run lint'
+                    sh 'npm run eslint'
 
                     echo 'SonarQube & Snyk Backend...'
                     withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
                         withSonarQubeEnv('SonarQube') {
-                            sh 'npm run scan'
+                            sh 'npm run sonar-scanner'
                         }
                     }
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true
                     }
                     withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
-                        sh 'npm run security-auth'
+                        sh 'npm run snyk-auth'
                     }
-                    sh 'npm run security'
+                    sh 'npm run snyk'
                 }
             }
         }
@@ -84,11 +84,11 @@ pipeline {
             steps {
                 echo 'Testing Frontend...'
                 dir('frontend') {
-                    sh 'npm run test'
+                    sh 'npm run jest'
                 }
                 echo 'Testing Backend...'
                 dir('backend') {
-                    sh 'npm run test'
+                    sh 'npm run jest'
                 }
             }
         }
@@ -169,8 +169,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     echo 'Testing Frontend on green...'
-                    sh 'npm run e2e'
-                    sh "BACKEND_GREEN=${BACKEND_GREEN} npm run perf"
+                    sh 'npm run playwright'
+                    sh "BACKEND_GREEN=${BACKEND_GREEN} npm run k6"
                 }
             }
         }

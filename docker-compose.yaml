@@ -1,46 +1,43 @@
+version: '3.8'
+
 services:
-  postgres:
-    image: postgres:17.5
+  db:
+    image: postgres:17-alpine
     container_name: db
-    restart: always
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: securenotes
+    restart: unless-stopped
+    env_file:
+      - docker.env
     ports:
       - "5432:5432"
     volumes:
-      - secure_notes_postgres:/var/lib/postgresql/data
+      - secret_notes_postgres:/var/lib/postgresql/data
     networks:
-      - secure_notes_network
+      - secret_notes_network
   backend:
     build:
       context: backend
       dockerfile: Dockerfile
     container_name: backend
-    restart: always
+    restart: unless-stopped
+    env_file:
+      - docker.env
     ports:
       - "3000:3000"
     networks:
-      - secure_notes_network
-    env_file: backend/docker.env
-    depends_on:
-      - postgres
+      - secret_notes_network
   frontend:
     build:
       context: frontend
       dockerfile: Dockerfile
     container_name: frontend
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
     networks:
-      - secure_notes_network
-    depends_on:
-      - backend
+      - secret_notes_network
 
 volumes:
-  secure_notes_postgres:
+  secret_notes_postgres:
 
 networks:
-  secure_notes_network:
+  secret_notes_network:

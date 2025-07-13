@@ -3,7 +3,7 @@ import {
   encryptNote,
   decryptNote,
   generateUUID,
-} from './crypto.service.js';
+} from '../../src/services/crypto.service.js';
 
 describe('Crypto Service', () => {
   const secretKey = 'mySuperSecretKey!';

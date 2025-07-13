@@ -104,6 +104,8 @@ async function initializeDOMInteractions(isLoadNotes) {
   }
 }
 
+window.initializeDOMInteractions = initializeDOMInteractions;
+
 /* eslint-disable no-undef */
 if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
   module.exports = {

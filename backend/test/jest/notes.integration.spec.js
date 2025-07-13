@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
-import routes from '../../routes/notes.routes.js';
-import { encryptNote } from '../../services/crypto.service.js';
+import routes from '../../src/routes/notes.routes.js';
+import { encryptNote } from '../../src/services/crypto.service.js';
 import { v4 as uuidv4 } from 'uuid';
 import supertest from 'supertest';
 
@@ -43,10 +43,13 @@ describe('Notes routes IT', () => {
         const client = {
           query: async (sql, params) => {
             if (sql.startsWith('INSERT INTO notes')) {
+              console.log(sql);
               const [uuid, title, encrypted] = params;
               mockNotes.set(uuid, { uuid, title, encrypted });
-            } else if (sql.startsWith('DELETE FROM notes')) {
-              mockNotes.delete(params[0]);
+            } else {
+              if (sql.startsWith('DELETE FROM notes')) {
+                mockNotes.delete(params[0]);
+              }
             }
           },
         };
