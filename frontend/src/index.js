@@ -81,13 +81,9 @@ async function initializeDOMInteractions(isLoadNotes) {
   if (typeof posthog !== "undefined") {
     /* eslint-disable no-undef */
     posthog.onFeatureFlags(() => {
-      console.log("Distinct ID:", posthog.get_distinct_id());
       const variant = posthog.getFeatureFlag("new-ui-theme");
       /* eslint-enable no-undef */
-      console.log("Feature flag variant:", variant);
       const button = document.getElementById("createNote");
-      console.log("Button element:", button);
-
       if (button) {
         button.style.backgroundColor = variant === "variant" ? "green" : "blue";
       }
