@@ -111,26 +111,26 @@ jobs:
 #          name: frontend-coverage-report
 #          path: frontend/coverage/lcov-report
 #
-#  build-deliver-backend-image:
-#    name: Build & Deliver Backend Image
-#    needs: test-backend
-#    secrets: inherit
-#    uses: ./.github/workflows/build-and-deliver.yml
-#    with:
-#      working-directory: backend
-#      dockerhub-repository: secret-notes-backend
-#      image-artifact-name: backend-image
-#
-#  build-deliver-frontend-image:
-#    name: Build & Deliver Frontend Image
-#    needs: test-frontend
-#    secrets: inherit
-#    uses: ./.github/workflows/build-and-deliver.yml
-#    with:
-#      working-directory: frontend
-#      dockerhub-repository: secret-notes-frontend
-#      image-artifact-name: frontend-image
-#
+  build-deliver-backend-image:
+    name: Build & Deliver Backend Image
+    #needs: test-backend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: backend
+      dockerhub-repository: secret-notes-backend
+      image-artifact-name: backend-image
+
+  build-deliver-frontend-image:
+    name: Build & Deliver Frontend Image
+    #needs: test-frontend
+    secrets: inherit
+    uses: ./.github/workflows/build-and-deliver.yml
+    with:
+      working-directory: frontend
+      dockerhub-repository: secret-notes-frontend
+      image-artifact-name: frontend-image
+
   deploy-green:
     name: Deploy new Green version
     runs-on: ubuntu-latest
