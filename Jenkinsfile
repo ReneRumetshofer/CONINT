@@ -21,14 +21,22 @@ pipeline {
     stages {
 
         stage('Install Dependencies') {
-            steps {
-                dir('frontend') {
-                    echo 'Installing frontend dependencies...'
-                    sh 'npm ci'
+            parallel {
+                stage('Install Frontend Dependencies') {
+                    steps {
+                        dir('frontend') {
+                            echo 'Installing frontend dependencies...'
+                            sh 'npm ci'
+                        }
+                    }
                 }
-                dir('backend') {
-                    echo 'Installing backend dependencies...'
-                    sh 'npm ci'
+                stage('Install Backend Dependencies') {
+                    steps {
+                        dir('backend') {
+                            echo 'Installing backend dependencies...'
+                            sh 'npm ci'
+                        }
+                    }
                 }
             }
         }
@@ -37,42 +45,50 @@ pipeline {
             when {
                 expression { return params.STATIC_TESTS }
             }
-            steps {
-                dir('frontend') {
-                    echo 'Linting Frontend...'
-                    sh 'npm run eslint'
+            parallel {
+                stage('Test Frontend') {
+                    steps {
+                        dir('frontend') {
+                            echo 'Linting Frontend...'
+                            sh 'npm run eslint'
 
-                    echo 'SonarQube & Snyk Frontend...'
-                    withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv('SonarQube') {
-                            sh 'npm run sonar-scanner'
+                            echo 'SonarQube & Snyk Frontend...'
+                            withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
+                                withSonarQubeEnv('SonarQube') {
+                                    sh 'npm run sonar-scanner'
+                                }
+                            }
+                            timeout(time: 1, unit: 'MINUTES') {
+                                waitForQualityGate abortPipeline: true
+                            }
+                            withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
+                                sh 'npm run snyk-auth'
+                            }
+                            sh 'npm run snyk'
                         }
                     }
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
-                    withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
-                        sh 'npm run snyk-auth'
-                    }
-                    sh 'npm run snyk'
                 }
-                dir('backend') {
-                    echo 'Linting Backend...'
-                    sh 'npm run eslint'
+                stage('Test Backend') {
+                    steps {
+                        dir('backend') {
+                            echo 'Linting Backend...'
+                            sh 'npm run eslint'
 
-                    echo 'SonarQube & Snyk Backend...'
-                    withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
-                        withSonarQubeEnv('SonarQube') {
-                            sh 'npm run sonar-scanner'
+                            echo 'SonarQube & Snyk Backend...'
+                            withCredentials([string(credentialsId: 'sonar-creds', variable: 'SONAR_TOKEN')]) {
+                                withSonarQubeEnv('SonarQube') {
+                                    sh 'npm run sonar-scanner'
+                                }
+                            }
+                            timeout(time: 1, unit: 'MINUTES') {
+                                waitForQualityGate abortPipeline: true
+                            }
+                            withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
+                                sh 'npm run snyk-auth'
+                            }
+                            sh 'npm run snyk'
                         }
                     }
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
-                    withCredentials([string(credentialsId: 'snyk-creds', variable: 'SNYK_TOKEN')]) {
-                        sh 'npm run snyk-auth'
-                    }
-                    sh 'npm run snyk'
                 }
             }
         }
@@ -81,14 +97,22 @@ pipeline {
             when {
                 expression { return params.STATIC_TESTS }
             }
-            steps {
-                echo 'Testing Frontend...'
-                dir('frontend') {
-                    sh 'npm run jest'
+            parallel {
+                stage('Test Frontend') {
+                    steps {
+                        dir('frontend') {
+                            echo 'Testing Frontend...'
+                            sh 'npm run jest'
+                        }
+                    }
                 }
-                echo 'Testing Backend...'
-                dir('backend') {
-                    sh 'npm run jest'
+                stage('Test Backend') {
+                    steps {
+                        dir('backend') {
+                            echo 'Testing Backend...'
+                            sh 'npm run jest'
+                        }
+                    }
                 }
             }
         }
@@ -97,17 +121,25 @@ pipeline {
             when {
                 expression { return params.BUILD_FRONTEND || params.BUILD_BACKEND }
             }
-            steps {
-                script {
-                    if (params.BUILD_FRONTEND) {
-                        echo 'Building Frontend...'
+            parallel {
+                stage('Build Frontend Image') {
+                    when {
+                        expression { return params.BUILD_FRONTEND }
+                    }
+                    steps {
                         dir('frontend') {
+                            echo 'Building Frontend...'
                             sh "docker build -t $FRONTEND_IMAGE:$IMAGE_TAG -t $FRONTEND_IMAGE:latest ."
                         }
                     }
-                    if (params.BUILD_BACKEND) {
-                        echo 'Building Backend...'
+                }
+                stage('Build Backend Image') {
+                    when {
+                        expression { return params.BUILD_BACKEND }
+                    }
+                    steps {
                         dir('backend') {
+                            echo 'Building Backend...'
                             sh "docker build -t $BACKEND_IMAGE:$IMAGE_TAG -t $BACKEND_IMAGE:latest ."
                         }
                     }
@@ -119,16 +151,26 @@ pipeline {
             when {
                 expression { return params.BUILD_FRONTEND || params.BUILD_BACKEND }
             }
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
-
-                    script {
-                        if (params.BUILD_FRONTEND) {
+            parallel {
+                stage('Push Frontend Docker Image') {
+                    when {
+                        expression { return params.BUILD_FRONTEND }
+                    }
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                             echo 'Pushing Frontend...'
                             sh "docker push $FRONTEND_IMAGE"
                         }
-                        if (params.BUILD_BACKEND) {
+                    }
+                }
+                stage('Push Backend Docker Image') {
+                    when {
+                        expression { return params.BUILD_BACKEND }
+                    }
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                             echo 'Pushing Backend...'
                             sh "docker push $BACKEND_IMAGE"
                         }
@@ -151,14 +193,21 @@ pipeline {
             when {
                 expression { return params.DEPLOY }
             }
-            steps {
-                echo 'Deploying Frontend to green...'
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green"
-                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
-
-                echo 'Deploying Backend to green...'
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green"
-                sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
+            parallel {
+                stage('Deploy Frontend to Green') {
+                    steps {
+                        echo 'Deploying Frontend to green...'
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
+                    }
+                }
+                stage('Deploy Backend to Green') {
+                    steps {
+                        echo 'Deploying Backend to green...'
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
+                    }
+                }
             }
         }
 
@@ -197,14 +246,21 @@ pipeline {
             when {
                 expression { return params.DEPLOY }
             }
-            steps {
-                echo 'Deploying Frontend to blue...'
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down frontend-blue"
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
-
-                echo 'Deploying Backend to blue...'
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue"
-                sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
+            parallel {
+                stage('Deploy Frontend to Blue') {
+                    steps {
+                        echo 'Deploying Frontend to blue...'
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down frontend-blue"
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
+                    }
+                }
+                stage('Deploy Backend to Blue') {
+                    steps {
+                        echo 'Deploying Backend to blue...'
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue"
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
+                    }
+                }
             }
         }
 
