@@ -57,27 +57,33 @@ async function deleteNote(uuid) {
   await loadNotes();
 }
 
-document.getElementById("newNoteForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const title = document.getElementById("newTitle").value;
-  const content = document.getElementById("newContent").value;
-  const key = document.getElementById("newKey").value;
+async function initializeDOMInteractions() {
+  document
+    .getElementById("newNoteForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("newTitle").value;
+      const content = document.getElementById("newContent").value;
+      const key = document.getElementById("newKey").value;
 
-  console.log(key, content, key);
+      console.log(key, content, key);
 
-  const res = await fetch(`${API}/notes`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, content, key }),
-  });
+      const res = await fetch(`${API}/notes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content, key }),
+      });
 
-  if (res.ok) {
-    alert("Notiz erstellt!");
-    document.getElementById("newNoteForm").reset();
-    loadNotes();
-  } else {
-    alert("Fehler beim Erstellen der Notiz.");
-  }
-});
+      if (res.ok) {
+        alert("Notiz erstellt!");
+        document.getElementById("newNoteForm").reset();
+        loadNotes();
+      } else {
+        alert("Fehler beim Erstellen der Notiz.");
+      }
+    });
 
-loadNotes();
+  loadNotes();
+}
+
+module.exports = { initializeDOMInteractions, loadNotes, loadNote, deleteNote };
