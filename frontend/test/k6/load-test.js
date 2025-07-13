@@ -28,12 +28,7 @@ export default function () {
       "Notiz erfolgreich erstellt": (res) => res.status === 200,
     });
 
-    let uuid;
-    try {
-      uuid = postRes.json().notes_uuid;
-    } catch (e) {
-      return;
-    }
+    let uuid = postRes.json().notes_uuid;
 
     // 2. Notiz abrufen mit Key
     const getRes = http.get(`${BASE_URL}/notes/${uuid}?key=k6testkey`);

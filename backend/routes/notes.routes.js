@@ -78,12 +78,13 @@ async function routes(fastify, options) {
       request.body.key,
       request.body.content
     );
+    const noteUuid = generateUUID();
     return fastify.pg.transact(async (client) => {
       await client.query(
         'INSERT INTO notes(notes_uuid, title, content) VALUES($1, $2, $3)',
-        [generateUUID(), request.body.title, encryptedContent]
+        [noteUuid, request.body.title, encryptedContent]
       );
-      reply.code(200);
+      reply.code(200).send({ notes_uuid: noteUuid });
     });
   });
 
