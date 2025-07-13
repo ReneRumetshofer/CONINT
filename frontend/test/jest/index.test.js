@@ -5,7 +5,7 @@ const {
   deleteNote,
 } = require("../../src/js/index.js");
 
-beforeAll(() => {
+beforeEach(() => {
   document.body.innerHTML = `
     <form id="newNoteForm">
       <input id="newTitle" />
@@ -27,6 +27,7 @@ beforeAll(() => {
 
 afterEach(() => {
   jest.clearAllMocks();
+  document.body.innerHTML = "";
 });
 
 describe("Testing notes functionality", () => {
