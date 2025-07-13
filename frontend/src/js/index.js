@@ -10,14 +10,6 @@ const API_HOSTS = {
 const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    initializeDOMInteractions();
-  });
-} else {
-  initializeDOMInteractions();
-}
-
 if (typeof posthog !== "undefined") {
   posthog.identify("my-unique-user-id"); // eslint-disable-line no-undef
 }
@@ -67,7 +59,7 @@ async function deleteNote(uuid) {
   await loadNotes();
 }
 
-async function initializeDOMInteractions() {
+async function initializeDOMInteractions(isLoadNotes) {
   document
     .getElementById("newNoteForm")
     .addEventListener("submit", async (e) => {
@@ -107,7 +99,9 @@ async function initializeDOMInteractions() {
     });
   }
 
-  await loadNotes();
+  if (isLoadNotes) {
+    await loadNotes();
+  }
 }
 
 /* eslint-disable no-undef */

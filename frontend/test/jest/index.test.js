@@ -13,7 +13,16 @@ beforeEach(() => {
       <input id="newKey" />
       <button type="submit">Submit</button>
     </form>
-    <div id="notes"></div>
+    <div id="notes">
+      <div class="note">
+        <strong>Test Note 3</strong><br>
+        UUID: 789<br>
+        <input type="text" placeholder="Key eingeben" id="key-789">
+        <button id="show-789">Anzeigen</button>
+        <button id="del-789">Löschen</button>
+        <pre id="content-789"></pre>
+      </div>
+    </div>
   `;
 
   global.fetch = jest.fn(() =>
@@ -22,7 +31,7 @@ beforeEach(() => {
     }),
   );
 
-  initializeDOMInteractions();
+  initializeDOMInteractions(false);
 });
 
 afterEach(() => {
@@ -49,7 +58,7 @@ describe("Testing notes functionality", () => {
   });
 
   test("loadNote should display the content of a note", async () => {
-    const uuid = "123";
+    const uuid = "789";
     const content = "This is the content of the note";
 
     fetch.mockResolvedValueOnce({
@@ -61,6 +70,23 @@ describe("Testing notes functionality", () => {
 
     expect(document.getElementById(`content-${uuid}`).textContent).toBe(
       content,
+    );
+  });
+
+  test("loadNote should not display the content of a note", async () => {
+    const uuid = "789";
+    const content = "403 Key is invalid";
+
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      text: async () => content,
+    });
+
+    await loadNote(uuid);
+
+    expect(document.getElementById(`content-${uuid}`).textContent).toBe(
+      `Fehler: 403 ${content}`,
     );
   });
 
