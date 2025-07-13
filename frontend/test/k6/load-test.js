@@ -28,8 +28,6 @@ export default function () {
       "Notiz erfolgreich erstellt": (res) => res.status === 200,
     });
 
-    if (postRes.status !== 200) return;
-
     let uuid;
     try {
       uuid = postRes.json().notes_uuid;
