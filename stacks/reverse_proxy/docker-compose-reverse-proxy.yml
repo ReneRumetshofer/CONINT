@@ -1,8 +1,8 @@
-version: '3'
+version: '3.8'
 
 services:
   nginx-proxy-manager:
-    image: jc21/nginx-proxy-manager:latest
+    image: jc21/nginx-proxy-manager:2
     container_name: nginx-proxy-manager
     restart: unless-stopped
     ports:
@@ -18,7 +18,7 @@ services:
       - sonarqube_sonarqube_network
       - proxy_network
   blue-green-proxy:
-    image: nginx:1.29.0-alpine
+    image: nginx:1.29-alpine
     container_name: blue-green-proxy
     restart: unless-stopped
     expose:
