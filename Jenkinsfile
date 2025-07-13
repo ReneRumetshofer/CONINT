@@ -198,14 +198,14 @@ pipeline {
                     steps {
                         echo 'Deploying Frontend to green...'
                         sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green"
-                        sh "IMAGE_NAME=${FRONTEND_IMAGE}:${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green"
                     }
                 }
                 stage('Deploy Backend to Green') {
                     steps {
                         echo 'Deploying Backend to green...'
                         sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green"
-                        sh "IMAGE_NAME=${BACKEND_IMAGE}:${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
+                        sh "IMAGE_TAG=${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green"
                     }
                 }
             }
@@ -251,14 +251,14 @@ pipeline {
                     steps {
                         echo 'Deploying Frontend to blue...'
                         sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down frontend-blue"
-                        sh "IMAGE_NAME=${FRONTEND_IMAGE}:${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue"
                     }
                 }
                 stage('Deploy Backend to Blue') {
                     steps {
                         echo 'Deploying Backend to blue...'
                         sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue"
-                        sh "IMAGE_NAME=${BACKEND_IMAGE}:${IMAGE_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
+                        sh "docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue"
                     }
                 }
             }

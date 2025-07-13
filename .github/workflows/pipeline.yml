@@ -105,18 +105,8 @@ jobs:
     uses: ./.github/workflows/build-and-deliver.yml
     with:
       working-directory: backend
-      dockerhub-repository: secret-notes-backend
+      dockerhub-repository: conint-securenotes-backend
       image-artifact-name: backend-image
-
-  build-deliver-frontend-image:
-    name: Build & Deliver Frontend Image
-    needs: test-frontend
-    secrets: inherit
-    uses: ./.github/workflows/build-and-deliver.yml
-    with:
-      working-directory: frontend
-      dockerhub-repository: secret-notes-frontend
-      image-artifact-name: frontend-image
 
   deploy-green:
     name: Deploy new Green version
@@ -143,10 +133,10 @@ jobs:
             cd /opt/CONINT && \
             echo 'Deploying Frontend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-green && \
-            IMAGE_NAME=renerumetshofer/secret-notes-frontend:${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green && \
+            IMAGE_TAG=${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build frontend-green && \
             echo 'Deploying Backend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down backend-green && \
-            IMAGE_NAME=renerumetshofer/secret-notes-backend:${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green
+            IMAGE_TAG=${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml up -d --build backend-green
 
   e2e-and-performance-tests:
     name: E2E & Performance Tests
@@ -228,10 +218,10 @@ jobs:
             cd /opt/CONINT && \
             echo 'Deploying Frontend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-green.yml down frontend-blue && \
-            IMAGE_NAME=renerumetshofer/secret-notes-frontend:${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue && \
+            IMAGE_TAG=${GREEN_FRONTEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build frontend-blue && \
             echo 'Deploying Backend to green...' && \
             docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml down backend-blue && \
-            IMAGE_NAME=renerumetshofer/secret-notes-backend:${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue
+            IMAGE_TAG=${GREEN_BACKEND_TAG} docker-compose -f stacks/secret_notes/docker-compose-secret-notes-blue.yml up -d --build backend-blue
 
       - name: Switch back to Blue
         uses: appleboy/ssh-action@v1

@@ -43,6 +43,7 @@ jobs:
   push-backend-image:
     name: Push Docker Image
     needs: build-image
+#    if: github.ref == 'refs/heads/production'
     runs-on: ubuntu-latest
     steps:
       - name: Download image artifact
