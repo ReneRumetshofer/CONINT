@@ -10,10 +10,6 @@ const API_HOSTS = {
 const hostname = window.location.hostname;
 const API = API_HOSTS[hostname];
 
-if (typeof posthog !== "undefined") {
-  posthog.identify("my-unique-user-id"); // eslint-disable-line no-undef
-}
-
 async function loadNotes() {
   const res = await fetch(`${API}/notes`);
   const notes = await res.json();
@@ -85,6 +81,7 @@ async function initializeDOMInteractions(isLoadNotes) {
   if (typeof posthog !== "undefined") {
     /* eslint-disable no-undef */
     posthog.onFeatureFlags(() => {
+      console.log("Distinct ID:", posthog.get_distinct_id());
       const variant = posthog.getFeatureFlag("new-ui-theme");
       /* eslint-enable no-undef */
       console.log("Feature flag variant:", variant);
@@ -94,14 +91,6 @@ async function initializeDOMInteractions(isLoadNotes) {
       if (button) {
         button.style.backgroundColor = variant === "variant" ? "green" : "blue";
       }
-    });
-
-    // Update immediately if flags already loaded
-    updateButtonColor();
-
-    // Listen for flag changes
-    posthog.onFeatureFlags(() => {
-      updateButtonColor();
     });
   }
 
