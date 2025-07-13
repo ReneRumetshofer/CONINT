@@ -25,6 +25,10 @@ beforeAll(() => {
   initializeDOMInteractions();
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe("Testing notes functionality", () => {
   test("loadNotes should load notes and display them", async () => {
     fetch.mockResolvedValueOnce({
