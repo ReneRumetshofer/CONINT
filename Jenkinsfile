@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        booleanParam(name: 'STATIC_TESTS', defaultValue: true, description: 'Statische Code Analyse durchführen? (lint, snyk, sonar, unit)')
+        booleanParam(name: 'STATIC_TESTS', defaultValue: true, description: 'Statische Code Analyse durchführen? (lint, snyk, sonar, jest)')
         booleanParam(name: 'DYNAMIC_TESTS', defaultValue: true, description: 'Dynamische Tests durchführen? (playwright, k6)')
         booleanParam(name: 'BUILD_FRONTEND', defaultValue: false, description: 'Frontend bauen und pushen?')
         booleanParam(name: 'BUILD_BACKEND', defaultValue: false, description: 'Backend bauen und pushen?')
