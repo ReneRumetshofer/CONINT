@@ -1,3 +1,11 @@
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeDOMInteractions();
+  });
+} else {
+  initializeDOMInteractions();
+}
+
 const API_HOSTS = {
   localhost: "http://localhost:3000/api",
   "staging.conint-securenotes.online":

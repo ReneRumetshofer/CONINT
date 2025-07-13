@@ -47,19 +47,6 @@
   </form>
 
   <script src="https://cdn.jsdelivr.net/npm/posthog-js@2/dist/posthog.min.js"></script>
-  <script>
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
-        initializeDOMInteractions();
-      });
-    } else {
-      initializeDOMInteractions();
-    }
-
-    posthog.init('phc_ASQ4jxULA4BuJQfLNnCH974PkeqxcLGfzQl2DyYXCjh', {
-      api_host: 'https://eu.posthog.com',
-    });
-  </script>
   <script type="module" src="js/index.js"></script>
 
 </body>
