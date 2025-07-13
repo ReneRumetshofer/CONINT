@@ -72,19 +72,13 @@ pipeline {
                 expression { return params.STATIC_TESTS }
             }
             steps {
-                script {
-                    if (params.BUILD_FRONTEND) {
-                        echo 'Testing Frontend...'
-                        dir('frontend') {
-                            sh 'npm run test'
-                        }
-                    }
-                    if (params.BUILD_BACKEND) {
-                        echo 'Testing Backend...'
-                        dir('backend') {
-                            sh 'npm run test'
-                        }
-                    }
+                echo 'Testing Frontend...'
+                dir('frontend') {
+                    sh 'npm run test'
+                }
+                echo 'Testing Backend...'
+                dir('backend') {
+                    sh 'npm run test'
                 }
             }
         }
