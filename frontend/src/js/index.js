@@ -79,7 +79,7 @@ async function initializeDOMInteractions() {
       if (res.ok) {
         alert("Notiz erstellt!");
         document.getElementById("newNoteForm").reset();
-        loadNotes();
+        await loadNotes();
       } else {
         alert("Fehler beim Erstellen der Notiz.");
       }
@@ -99,7 +99,7 @@ async function initializeDOMInteractions() {
     });
   }
 
-  loadNotes();
+  await loadNotes();
 }
 
 /* eslint-disable no-undef */
