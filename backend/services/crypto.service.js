@@ -29,10 +29,10 @@ export function encryptNote(secretKey, plaintext) {
 export function decryptNote(secretKey, encryptedData) {
   const data = Buffer.from(encryptedData, 'base64');
 
-  const salt = data.slice(0, 16);
-  const iv = data.slice(16, 28);
-  const authTag = data.slice(28, 44);
-  const ciphertext = data.slice(44);
+  const salt = data.subarray(0, 16);
+  const iv = data.subarray(16, 28);
+  const authTag = data.subarray(28, 44);
+  const ciphertext = data.subarray(44);
 
   const key = deriveKey(secretKey, salt);
   const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);

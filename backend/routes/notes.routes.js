@@ -51,9 +51,8 @@ async function routes(fastify) {
 
         try {
           reply.send(decryptNote(request.query.key, result.rows[0].content));
-          /* eslint-disable no-unused-vars */
         } catch (err) {
-          /* eslint-enable no-unused-vars */
+          console.log(err);
           reply.code(403).send('Key is invalid');
         }
       }
@@ -90,9 +89,7 @@ async function routes(fastify) {
     });
   });
 
-  /* eslint-disable no-unused-vars */
   const deleteNotesOpts = {
-    /* eslint-enable no-unused-vars */
     schema: {
       params: {
         type: 'object',
@@ -103,14 +100,18 @@ async function routes(fastify) {
       },
     },
   };
-  fastify.delete('/api/notes/:uuid', async (request, reply) => {
-    return fastify.pg.transact(async (client) => {
-      await client.query('DELETE FROM notes WHERE notes_uuid = $1', [
-        request.params.uuid,
-      ]);
-      reply.code(200);
-    });
-  });
+  fastify.delete(
+    '/api/notes/:uuid',
+    deleteNotesOpts,
+    async (request, reply) => {
+      return fastify.pg.transact(async (client) => {
+        await client.query('DELETE FROM notes WHERE notes_uuid = $1', [
+          request.params.uuid,
+        ]);
+        reply.code(200);
+      });
+    }
+  );
 }
 
 export default routes;
