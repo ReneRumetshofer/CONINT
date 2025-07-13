@@ -1,5 +1,7 @@
 FROM nginx:1.29-alpine
 
-COPY src /usr/share/nginx/html
+COPY --chown=nginx:nginx src /usr/share/nginx/html
 
 EXPOSE 80
+
+USER nginx
