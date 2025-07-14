@@ -65,6 +65,7 @@ pipeline {
                                 sh 'npm run snyk-auth'
                             }
                             sh 'npm run snyk'
+                            sh 'npm run snyk-monitor'
                         }
                     }
                 }
@@ -87,6 +88,7 @@ pipeline {
                                 sh 'npm run snyk-auth'
                             }
                             sh 'npm run snyk'
+                            sh 'npm run snyk-monitor'
                         }
                     }
                 }

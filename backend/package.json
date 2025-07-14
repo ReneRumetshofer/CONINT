@@ -17,6 +17,7 @@
     "eslint": "eslint src/",
     "sonar-scanner": "sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN",
     "snyk-auth": "snyk auth --auth-type=token $SNYK_TOKEN",
+    "snyk-monitor": "snyk monitor",
     "snyk": "snyk test",
     "jest": "jest --coverage",
     "start-compose-v1": "docker-compose -f ../docker-compose.yaml up -d --build backend",
