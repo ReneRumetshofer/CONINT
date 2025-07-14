@@ -85,7 +85,11 @@ async function initializeDOMInteractions(isLoadNotes) {
       /* eslint-enable no-undef */
       const button = document.getElementById("createNote");
       if (button) {
-        button.style.backgroundColor = variant === "variant" ? "green" : "blue";
+        if (variant === "variant") {
+          button.style.backgroundColor = "green";
+        } else if (variant === "control") {
+          button.style.backgroundColor = "blue";
+        }
       }
     });
   }
